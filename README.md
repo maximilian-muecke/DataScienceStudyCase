@@ -5,7 +5,7 @@ Here you can find the Case Study for the Data Scientist position of Think-Tank B
 This Case Study is the opportunity for us to assess some skills you will need as a Data Scientist in our Team and to show us your capacity to come up with innovative ideas when you face new challenges.
 You have 4 days to submit your results. Afterwards, you will have the opportunity to present and discuss your results to different members of our team for 10-15 min.
 
-Note : If you have any ideas but you didn't implement them, please list them at the end of your solution.
+**IMPORTANT : If you have any ideas but you didn't implement them, please list them at the end of your solution.**
 
 
 ## Task 1 : Model building
@@ -39,9 +39,9 @@ Context :  You work in a Crypto startup and you want to identify malicious Ether
 
 Leading points :
 
-1) Explore the datasets, if necessary clean them and keep the revelant features.
+1) Explore the datasets, if necessary clean them and create or keep the revelant features.
 2) Analyze the accounts' behavior. What helpful statements can you make?  
-3) Group the accounts in several categories based on their behavior. Justify your grouping decision. 
+3) Group the accounts (acc_name) in several categories based on their behavior. Justify your grouping decision. 
 4) Given the different groups you have created, what would you advise the business to do?  
 5) Train a prediction model that predicts maliciousness based on financial behavior. How good does your model perform? How would you tweak it?
 4) Given the prediction you have created, what would you advise the business to do?  
