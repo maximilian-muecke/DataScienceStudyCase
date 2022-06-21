@@ -41,7 +41,7 @@ Leading points :
 
 1) Explore the datasets, if necessary clean them and create or keep the revelant features.
 2) Analyze the accounts' behavior. What helpful statements can you make?  
-3) Group the accounts (acc_name) in several categories based on their behavior. Justify your grouping decision. 
+3) Group the malicious accounts (acc_name) in several categories based on their behavior. Justify your grouping decision. 
 4) Given the different groups you have created, what would you advise the business to do?  
 5) Train a prediction model that predicts maliciousness based on financial behavior. How good does your model perform? How would you tweak it?
 4) Given the prediction you have created, what would you advise the business to do?  
