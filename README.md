@@ -5,7 +5,7 @@ Here you can find the Case Study for the Data Scientist position of Think-Tank B
 This Case Study is the opportunity for us to assess some skills you will need as a Data Scientist in our Team and to show us your capacity to come up with innovative ideas when you face new challenges.
 You have 4 days to submit your results. Afterwards, you will have the opportunity to present and discuss your results to different members of our team for 10-15 min.
 
-**IMPORTANT : If you have any ideas but you didn't implement them, please list them at the end of your solution.**
+**IMPORTANT : Please read carefully the instructions, .If you have any ideas but you didn't implement them, please list them at the end of your solution.**
 
 
 ## Task 1 : Model building
