@@ -8,8 +8,10 @@ Data Science Case Study November 2022 / Think Tank
 Colors are used by the audit experts to easily show the current qualification of a supplier:
 
 > **Green** indicates that the suppliers are qualified in the current audit process.
-**Yellow** means that they receive warnings.
-**Red** means that the suppliers are disqualified.
+
+> **Yellow** means that they receive warnings.
+
+> **Red** means that the suppliers are disqualified.
 
 ## Datasets
 Two datasets are available for this case study:
