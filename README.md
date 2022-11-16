@@ -11,7 +11,9 @@ Colors are used by the audit experts to easily show the qualification of a suppl
 **Yellow** means that they receive warnings. \
 **Red** means that the suppliers are disqualified.
 
-> **Example**: An example of a single supplier and a single derivative is shown below for their audit period between January and June 2022. Throughout the stages of their supplier audit process from T1 to T3, the supplier received some qualifications. This supplier was added to the next stage two months after the start of the previous one, but this timeline does not necessarily apply for other suppliers. This one supplier received a green qualification at the end of their audit, therefore the result is green. Your task is to predict the result which is the latest qualification of suppliers in the audit process.
+**Example**: 
+
+> An example of a single supplier and a single derivative is shown below for their audit period between January and June 2022. Throughout the stages of their supplier audit process from T1 to T3, the supplier received some qualifications. This supplier was added to the next stage two months after the start of the previous one, but this timeline does not necessarily apply for other suppliers. This one supplier received a green qualification at the end of their audit, therefore the result is green. Your task is to predict the result which is the latest qualification of suppliers in the audit process.
 
 |Supplier Name |Derivative Name|Recent Month|T1 Color|T2 Color|T3 Color|Result|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
