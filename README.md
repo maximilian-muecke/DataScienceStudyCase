@@ -17,14 +17,23 @@ Two datasets are available for this case study:
 - **Audit History: Dataset of supplier audit histories.**
 
 		* SupplierId: The supplier who is involved in the audit process.
+
 		* RecentMonth: Update of result for the month (e.g, see table below).
+
 		* RecentTimeStamp: The time when the audit is conducted.
+
 		* DerivativeName: The type of model car the supplier is supplying for, one supplier can supply for different model cars.
+
 		* DerivativeRegion: The region where the derivative is in production.
+
 		* ProductionLine: The name code of the production line.
+
 		* T1Color: The color shows the qualification of the supplier if they are in stage T1.
+
 		* T2Color: The color shows the qualification of the supplier if they are in stage T2.
+
 		* T3Color: The color shows the qualification of the supplier if they are in stage T3.
+
 		* Result: The color of the current result.
 
 |Derivative Name|Recent Month|T1 Color|T2 Color|T3 Color|Result|
@@ -42,12 +51,9 @@ Two datasets are available for this case study:
 	
 		* Amount_WD_3M, Amount_WD_6M, Amount_WD_12M: Wrong deliveries happen when suppliers send wrong material parts. These features are the amount of wrong deliveries in the last 3 months, 6 months or 12 months for each supplier.
 
-
 		* Amount_Backlogs_3M, Amount_Backlogs_6M, Amount_Backlogs_12M: Backlogs happen when suppliers cannot deliver parts on time. These features are the amount of backlogs in the last 3 months, 6 months or 12 months for each supplier.
 
-
 		* 12_Month_LPKM: LPKM score is the grade of the supplier regarding the KPIs for the last 12 months (the higher the better).
-
 
 		* BadSupplierIndicator: Indicator of whether the supplier has bad performance before.
 
