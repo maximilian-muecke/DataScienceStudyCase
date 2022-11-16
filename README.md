@@ -22,7 +22,7 @@ Colors are used by the audit experts to easily show the qualification of a suppl
 |S1|D1|May 2022|Green|Yellow|Red|Red|
 |S1|D1|Jun 2022|Green|Green|Green|Green|
 
-![alt text](https://github.com/ThinkTankBMWGroup/DataScienceStudyCase/blob/main/process.PNG?raw=true)
+![alt text](https://github.com/ThinkTankBMWGroup/DataScienceStudyCase/blob/main/Example.PNG?raw=true)
 
 ## Datasets
 Two datasets are available for this case study:
