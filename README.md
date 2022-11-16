@@ -1,7 +1,7 @@
 # Data Science Case Study: Supplier Audit Results Prediction
 Data Science Case Study November 2022 / Think Tank
 
-**Context**: Imagine you are a Data Scientist in the Supply Chain Delivery Assurance Department of BMW Group and you are responsible for predicting the supplier audit results to support business decisions. Before and during new production of model cars, supplier audits are conducted by audit experts and it is an important process to ensure the production quality. The audit experts want to have data points where they can see the qualification of certain suppliers in the future.
+**Context**: Imagine you are a Data Scientist in the Supply Chain Delivery Assurance Department of BMW Group. Before and during new production of model cars, supplier audits are conducted by audit experts, and it is an important process to ensure the reliability of suppliers. Selected suppliers must go through a year-long audit process before they are fully entrusted to deliver parts for BMW production processes. You are responsible for predicting the supplier audit results so that the audit experts can foresee the qualification of certain suppliers and know if there will be enough qualified suppliers in the future.
 
 **Supplier Audit Process**: T1, T2, T3 represent the different stages of the production, and the result corresponds to the most recent stage.
 
@@ -11,6 +11,19 @@ Colors are used by the audit experts to easily show the qualification of a suppl
 **Yellow** means that they receive warnings. \
 **Red** means that the suppliers are disqualified.
 
+> **Example** An example of a single supplier and a single derivative is shown below for their audit period between January and June 2022. Throughout the stages of their supplier audit process from T1 to T3, the supplier received some qualifications. This supplier was added to the next stage two months after the start of the previous one, but this timeline does not necessarily apply for other suppliers. This one supplier received a green qualification at the end of their audit, therefore the qualification is green. Your task is to predict the result which is the latest qualification in the audit process.
+
+|Supplier Name |Derivative Name|Recent Month|T1 Color|T2 Color|T3 Color|Result|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|S1|D1|Jan 2022|Green|-|-|Green|
+|S1|D1|Feb 2022|Green|-|-|Green|
+|S1|D1|Mar 2022|Green|Red|-|Red|
+|S1|D1|Apr 2022|Green|Yellow|-|Yellow|
+|S1|D1|May 2022|Green|Yellow|Red|Red|
+|S1|D1|Jun 2022|Green|Green|Green|Green|
+
+![alt text](https://github.com/ThinkTankBMWGroup/DataScienceStudyCase/blob/main/process.PNG?raw=true)
+
 ## Datasets
 Two datasets are available for this case study:
 
@@ -18,7 +31,7 @@ Two datasets are available for this case study:
 
 		* SupplierId: The supplier who is involved in the audit process.
 
-		* RecentMonth: Update of result for the month (e.g, see table below).
+		* RecentMonth: Update of result for the month.
 
 		* RecentTimeStamp: The time when the audit is conducted.
 
@@ -35,17 +48,6 @@ Two datasets are available for this case study:
 		* T3Color: The color shows the qualification of the supplier if they are in stage T3.
 
 		* Result: The color of the current result.
-
-|Derivative Name|Recent Month|T1 Color|T2 Color|T3 Color|Result|
-|:-:|:-:|:-:|:-:|:-:|:-:|
-|D1|Jun 2022|Green|Green|Green|Green|
-|D1|May 2022|Green|Yellow|Red|Red|
-|D1|Apr 2022|Green|Yellow|-|Yellow|
-|D1|Mar 2022|Green|Red|-|Red|
-|D1|Feb 2022|Green|-|-|Green|
-|D1|Jan 2022|Green|-|-|Green|
-
-![alt text](https://github.com/ThinkTankBMWGroup/DataScienceStudyCase/blob/main/process.PNG?raw=true)
 
 - **Supplier Performance KPIs: Dataset for key supplier performance indicators.**
 
