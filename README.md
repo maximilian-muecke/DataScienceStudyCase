@@ -45,7 +45,7 @@ Two datasets are available for this case study:
 |D1|Feb 2022|Green|-|-|Green|
 |D1|Jan 2022|Green|-|-|Green|
 
-![alt text](https://github.com/ThinkTankBMWGroup/DataScienceStudyCase/blob/main/Process.PNG?raw=true)
+![alt text](https://github.com/ThinkTankBMWGroup/DataScienceStudyCase/blob/main/process.PNG?raw=true)
 
 - **Supplier Performance KPIs: Dataset for key supplier performance indicators.**
 
