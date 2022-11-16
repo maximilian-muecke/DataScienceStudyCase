@@ -45,6 +45,8 @@ Two datasets are available for this case study:
 |D1|Feb 2022|Green|-|-|Green|
 |D1|Jan 2022|Green|-|-|Green|
 
+![alt text](https://github.com/ThinkTankBMWGroup/DataScienceStudyCase/blob/main/Process.PNG?raw=true)
+
 - **Supplier Performance KPIs: Dataset for key supplier performance indicators.**
 
 		* SupplierId: The supplier who has records of wrong deliveries, weekly reds, backlogs or LPKM score.
