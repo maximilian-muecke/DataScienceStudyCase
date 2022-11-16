@@ -7,10 +7,8 @@ Data Science Case Study November 2022 / Think Tank
 
 Colors are used by the audit experts to easily show the qualification of a supplier:
 
-> **Green** indicates that the suppliers are qualified in the current audit process.
-
-**Yellow** means that they receive warnings.
-
+> **Green** indicates that the suppliers are qualified in the current audit process. \
+**Yellow** means that they receive warnings. \
 **Red** means that the suppliers are disqualified.
 
 ## Datasets
@@ -24,7 +22,7 @@ Two datasets are available for this case study:
 
 		* RecentTimeStamp: The time when the audit is conducted.
 
-		* DerivativeName: The type of model car the supplier is supplying for, one supplier can supply for different model cars.
+		* DerivativeName: The type of model car the supplier is supplying for. One supplier can supply for different model cars.
 
 		* DerivativeRegion: The region where the derivative is in production.
 
@@ -61,9 +59,9 @@ Two datasets are available for this case study:
 
 ## Leading Points
 
-1. Explore the datasets, if necessary clean them and keep and / or create relevant features.
-2.  Analyze the features, what statements can you make?
-3. Train a prediction model to predict the result (green, yellow or red) of the audit process. How good is your model performance? How would you tweak it?
+1. Explore the datasets, if necessary clean them and create relevant features.
+2. Analyze the features, what statements can you make?
+3. Train a prediction model to predict the most recent results (green, yellow or red) of the supplier audit process. How good is your model performance? How would you tweak it?
 4. Given the results of the analysis and prediction, how would you explain them to the audit experts? What advice would you give to the business?
 
 *Optional: You can also implement / explain a Causal Machine Learning approach (e.g. python libraries: DoWHY, DECI, PyWHY) to increase the model explainability.*
