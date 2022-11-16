@@ -13,18 +13,17 @@ Colors are used by the audit experts to easily show the qualification of a suppl
 
 **Example**: 
 
-> An example of a single supplier and a single derivative is shown below for their audit period between January and June 2022. Throughout the stages of their supplier audit process from T1 to T3, the supplier received some qualifications. This supplier was added to the next stage two months after the start of the previous one, but this timeline does not necessarily apply for other suppliers. This one supplier received a green qualification at the end of their audit, therefore the result is green. Your task is to predict the result which is the latest qualification of suppliers in the audit process.
+> An example of a single supplier and a single derivative (the type of model car the supplier is supplying) is shown below for their audit period between February and June 2022. Throughout the stages of their supplier audit process from T1 to T3, the supplier received some qualifications. This supplier was added to the next stage two months after the start of the previous one, but this timeline does not necessarily apply for other suppliers. This one supplier received a green qualification at the end of their audit process, therefore the result is green. Your task is to predict the result which is the latest qualification of suppliers in the audit process.
 
 |Supplier Name |Derivative Name|Recent Month|T1 Color|T2 Color|T3 Color|Result|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|S1|D1|Jan 2022|Green|-|-|Green|
 |S1|D1|Feb 2022|Green|-|-|Green|
 |S1|D1|Mar 2022|Green|Red|-|Red|
 |S1|D1|Apr 2022|Green|Yellow|-|Yellow|
 |S1|D1|May 2022|Green|Yellow|Red|Red|
 |S1|D1|Jun 2022|Green|Green|Green|Green|
 
-![alt text](https://github.com/ThinkTankBMWGroup/DataScienceStudyCase/blob/main/example.PNG?raw=true)
+![alt text](https://github.com/ThinkTankBMWGroup/DataScienceStudyCase/blob/main/Example.PNG?raw=true)
 
 ## Datasets
 Two datasets are available for this case study:
@@ -63,7 +62,7 @@ Two datasets are available for this case study:
 
 		* BadSupplierIndicator: Indicator of whether the supplier has bad performance before.
 
-## Leading Points
+## Tasks
 
 1. Explore the datasets, if necessary clean them and create relevant features.
 2. Analyze the features, what statements can you make?
