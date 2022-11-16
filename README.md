@@ -1,17 +1,15 @@
-# Data Science Case Study 
+# Data Science Case Study: Supplier Audit Results Prediction
 Data Science Case Study November 2022 / Think Tank
 
-**Context**: Imagine you are a Data Scientist in the Supply Chain Delivery Assurance Department of BMW Group and you are responsible for predicting the supplier audit results to support business decisions. Before and during new production of model cars, supplier audits are conducted by audit experts and it is an important process to ensure the production quality. The audit experts want to have data points where they can see the qualification of certain supplier in the future.
+**Context**: Imagine you are a Data Scientist in the Supply Chain Delivery Assurance Department of BMW Group and you are responsible for predicting the supplier audit results to support business decisions. Before and during new production of model cars, supplier audits are conducted by audit experts and it is an important process to ensure the production quality. The audit experts want to have data points where they can see the qualification of certain suppliers in the future.
 
 **Supplier Audit Process**: T1, T2, T3 represent the different stages of the production, and the result corresponds to the most recent stage.
 
-Colors are used by the audit experts to easily show the current qualification of a supplier:
+Colors are used by the audit experts to easily show the qualification of a supplier:
 
 > **Green** indicates that the suppliers are qualified in the current audit process.
-
-> **Yellow** means that they receive warnings.
-
-> **Red** means that the suppliers are disqualified.
+**Yellow** means that they receive warnings.
+**Red** means that the suppliers are disqualified.
 
 ## Datasets
 Two datasets are available for this case study:
