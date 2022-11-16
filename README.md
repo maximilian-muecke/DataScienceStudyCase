@@ -1,69 +1,56 @@
-# DataScienceStudyCase
-Data Science Study Case June 2022 / Think-Tank
+# Data Science Case Study 
+Data Science Case Study November 2022 / Think Tank
 
-Here you can find the Case Study for the Data Scientist position of Think-Tank BMW Group. 
-This Case Study is the opportunity for us to assess some skills you will need as a Data Scientist in our Team and to show us your capacity to come up with innovative ideas when you face new challenges.
-You have 4 days to submit your results. Afterwards, you will have the opportunity to present and discuss your results to different members of our team for 10-15 min.
+**Context**: Imagine you are a Data Scientist in the Supply Chain Delivery Assurance Department of BMW Group and you are responsible for predicting the supplier audit results to support business decisions. Before and during new production of model cars, supplier audits are conducted by audit experts and it is an important process to ensure the production quality. The audit experts want to have data points where they can see the qualification of certain supplier in the future.
 
-**IMPORTANT : Please read carefully the instructions, .If you have any ideas but you didn't implement them, please list them at the end of your solution.**
+**Supplier Audit Process**: T1, T2, T3 represent the different stages of the production, and the result corresponds to the most recent stage.
 
+Colors are used by the audit experts to easily show the current qualification of a supplier:
 
-## Task 1 : Model building
+> **Green** indicates that the suppliers are qualified in the current audit process.
+**Yellow** means that they receive warnings.
+**Red** means that the suppliers are disqualified.
 
-Context :  You work in a Crypto startup and you want to identify malicious Ethereum addresses. Fortunately, you have found 3 interesting datasets :
+## Datasets
+Two datasets are available for this case study:
 
-- malicious_adresses : Dataset of malicious addresses with the comments explaining the reason of suspecting the adresses. 
-- malicious_transactions : Transaction data related to malicious adresses.
+- **Audit History: Dataset of supplier audit histories.**
 
-            * acc_name : Malicious address involved in the transaction.
-            * blockNumber : The block number that the transaction was included in.
-            * timeStamp : The time (in UTC) at which the block was mined.
-            * hash : A unique identifier that can be used to locate a specific transaction.
-            * nonce : The count of transactions sent out from the account. The number is initialized at 0 and is incremented by 1 for each transaction sent.
-            * blockHash : A unique identifier of the block. 
-            * transactionIndex : Index transaction.
-            * from : The acc_name from which the transaction was sent.
-            * to : The acc_name to which the transaction is addressed.
-            * value : The amount of Ether sent via the transaction.
-            * gas : The upper limit of how much computational work and storage the sender is willing to spend on the transaction.
-            * gasPrice : The amount of Ether per unit of gas the user is willing to pay for the transaction, commonly denoted in a subunit of Ether known as Gwei. 1 Gwei = 1x10^-9 Ether.
-            * isError : boolean which indicates if an error occured during the transaction
-            * txreceipt_status : status of the transaction, "1" means the transaction succeded, "0" means the transaction failed. 
-            * input : Information that is passed to a smart contract when a transaction is sent to its address. However, if the transaction is creating a contract, the contract’s bytecode is placed in the input data field.
-            * contractAdress : The contract address related to the input.
-            * cumulativeGas : Sum of the gasUsed by this transaction and all preceding transactions in the same block.
-            * gasUsed : The amount of computational work and storage used in the transaction.
-            * confirmations : Block number that confirmed the transaction. 
-            
-- normal_transactions : Transaction data related to normal adresses.
+		* SupplierId: The supplier who is involved in the audit process.
+		* RecentMonth: Update of result for the month (e.g, see table below).
+		* RecentTimeStamp: The time when the audit is conducted.
+		* DerivativeName: The type of model car the supplier is supplying for, one supplier can supply for different model cars.
+		* DerivativeRegion: The region where the derivative is in production.
+		* ProductionLine: The name code of the production line.
+		* T1Color: The color shows the qualification of the supplier if they are in stage T1.
+		* T2Color: The color shows the qualification of the supplier if they are in stage T2.
+		* T3Color: The color shows the qualification of the supplier if they are in stage T3.
+		* Result: The color of the current result.
 
-Leading points :
+|Derivative Name|Recent Month|T1 Color|T2 Color|T3 Color|Result|
+|:-:|:-:|:-:|:-:|:-:|:-:|
+|D1|Jun 2022|Green|Green|Green|Green|
+|D1|May 2022|Green|Yellow|Red|Red|
+|D1|Apr 2022|Green|Yellow|-|Yellow|
+|D1|Mar 2022|Green|Red|-|Red|
+|D1|Feb 2022|Green|-|-|Green|
+|D1|Jan 2022|Green|-|-|Green|
 
-1) Explore the datasets, if necessary clean them and create or keep the revelant features.
-2) Analyze the accounts' behavior. What helpful statements can you make?  
-3) Group the malicious accounts (acc_name) in several categories based on their behavior. Justify your grouping decision. 
-4) Given the different groups you have created, what would you advise the business to do?  
-5) Train a prediction model that predicts maliciousness based on financial behavior. How good does your model perform? How would you tweak it?
-4) Given the prediction you have created, what would you advise the business to do?  
- 
-Feel free to use your own methodology to solve this problem. 
+- **Supplier Performance KPIs: Dataset for key supplier performance indicators.**
 
+		* SupplierId: The supplier who has records of wrong deliveries, weekly reds, backlogs or LPKM score.
+		* Amount_WD_3M, Amount_WD_6M, Amount_WD_12M: Wrong deliveries happen when suppliers send wrong material parts. These features are the amount of wrong deliveries in the last 3 months, 6 months or 12 months for each supplier.
+		* Amount_Backlogs_3M, Amount_Backlogs_6M, Amount_Backlogs_12M: Backlogs happen when suppliers cannot deliver parts on time. These features are the amount of backlogs in the last 3 months, 6 months or 12 months for each supplier.
+		* 12_Month_LPKM: LPKM score is the grade of the supplier regarding the KPIs for the last 12 months (the higher the better).
+		* BadSupplierIndicator: Indicator of whether the supplier has bad performance before.
 
-## Task 2 : Innovative ideas
+## Leading Points
 
-Context : In Supply Chain process, a company should rely on their suppliers. However, some of your suppliers have made some mistakes in the delivery (missing or wrong items shipped) and the production has been stopped. As a Data Scientist, working in a famous Food Company, your manager asks you to detect bad suppliers. Give some ideas to solve the problem. 
+1. Explore the datasets, if necessary clean them and keep and / or create relevant features.
+2.  Analyze the features, what statements can you make?
+3. Train a prediction model to predict the result (green, yellow or red) of the audit process. How good is your model performance? How would you tweak it?
+4. Given the results of the analysis and prediction, how would you explain them to the audit experts? What advice would you give to the business?
 
-Leading points : 
-
-1) Explain the process/methodology/models and justify it.
-2) What kind of data do you need to solve this problem? 
-3) What are the limits of your ideas?
-
-
-Hint : 
-- The level of escalation can be measured according to some features : Missing and wrong items at the delivery, Delays...
-- Bad suppliers are not the majority of the suppliers. 
-
+*Optional: You can also implement / explain a Causal Machine Learning approach (e.g. python libraries: DoWHY, DECI, PyWHY) to increase the model explainability.*
 
 # Enjoy the task and blow our minds !
-
