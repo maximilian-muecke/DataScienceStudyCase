@@ -8,8 +8,8 @@ Data Science Case Study November 2022 / Think Tank
 Colors are used by the audit experts to easily show the qualification of a supplier:
 
 > **Green** indicates that the suppliers are qualified in the current audit process.
-**Yellow** means that they receive warnings.
-**Red** means that the suppliers are disqualified.
+> **Yellow** means that they receive warnings.
+> **Red** means that the suppliers are disqualified.
 
 ## Datasets
 Two datasets are available for this case study:
@@ -39,9 +39,16 @@ Two datasets are available for this case study:
 - **Supplier Performance KPIs: Dataset for key supplier performance indicators.**
 
 		* SupplierId: The supplier who has records of wrong deliveries, weekly reds, backlogs or LPKM score.
+	
 		* Amount_WD_3M, Amount_WD_6M, Amount_WD_12M: Wrong deliveries happen when suppliers send wrong material parts. These features are the amount of wrong deliveries in the last 3 months, 6 months or 12 months for each supplier.
+
+
 		* Amount_Backlogs_3M, Amount_Backlogs_6M, Amount_Backlogs_12M: Backlogs happen when suppliers cannot deliver parts on time. These features are the amount of backlogs in the last 3 months, 6 months or 12 months for each supplier.
+
+
 		* 12_Month_LPKM: LPKM score is the grade of the supplier regarding the KPIs for the last 12 months (the higher the better).
+
+
 		* BadSupplierIndicator: Indicator of whether the supplier has bad performance before.
 
 ## Leading Points
