@@ -67,8 +67,8 @@ Two datasets are available for this case study:
 1. Explore the datasets, if necessary clean them and create relevant features.
 2. Analyze the features, what statements can you make?
 3. Train a prediction model to predict the most recent results (green, yellow or red) of the supplier audit process. How good is your model performance? How would you tweak it?
-4. Given the results of the analysis and prediction, how would you explain them to the audit experts? What advice would you give to the business?
+4. Given the results of the analysis and prediction, how would you explain them to the audit experts? What advice would you give to support business decisions?
 
-*Optional: You can also implement / explain a Causal Machine Learning approach (e.g. python libraries: DoWHY, DECI, PyWHY) to increase the model explainability.*
+*Optional: You can also implement / explain a Causal Machine Learning approach (e.g. python libraries: DoWhy, DECI, PyWhy) to increase the model explainability.*
 
 # Enjoy the task and blow our minds !
