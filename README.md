@@ -71,4 +71,4 @@ Two datasets are available for this case study:
 
 *Optional: You can also implement / explain a Causal Machine Learning approach (e.g. python libraries: DoWhy, DECI, PyWhy) to increase the model explainability.*
 
-# Enjoy the task and blow our minds !
+# Enjoy the task and blow our minds!
