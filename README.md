@@ -52,7 +52,7 @@ Two datasets are available for this case study:
 
 - **Supplier Performance KPIs: Dataset for key supplier performance indicators.**
 
-		* SupplierId: The supplier who has records of wrong deliveries, weekly reds, backlogs or LPKM score.
+		* SupplierId: The supplier who has records of wrong deliveries, backlogs or LPKM score.
 	
 		* Amount_WD_3M, Amount_WD_6M, Amount_WD_12M: Wrong deliveries happen when suppliers send wrong material parts. These features are the amount of wrong deliveries in the last 3 months, 6 months or 12 months for each supplier.
 
