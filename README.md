@@ -13,7 +13,7 @@ Colors are used by the audit experts to easily show the qualification of a suppl
 
 **Example**: 
 
-> An example of a single supplier and a single derivative (the supplier is providing parts for specific types of model car) is shown below for their audit period between February and June 2022. Throughout the stages of their supplier audit process from T1 to T3, the supplier received some qualifications. This supplier was added to T2 after one month of the start of T1, and was added to T3 after another two months, but this timeline does not necessarily apply for other suppliers. A supplier does not have to achieve green in one stage to be able to move to the next stage. This one supplier received a green qualification in their latest stage of their latest qualification, therefore the latest result is green. <ins>Your task is to predict the result which is the latest qualification of certain supplier and certain derivative in their latest audit stage.</ins>
+> An example of a single supplier and a single derivative (the supplier is providing parts for specific types of model car) is shown below for their audit period between February and June 2022. Throughout the stages of their supplier audit process from T1 to T3, the supplier received some qualifications. This supplier was added to T2 after one month of the start of T1, and was added to T3 after another two months. Note that this timeline does not necessarily apply for other suppliers and a supplier does not have to achieve green in one stage to be transferred to the next stage, this is based on the planning of audits from experts. This one supplier received a green qualification in their latest stage of their latest qualification, therefore the latest result is green. <ins>Your task is to predict the result which is the latest qualification of certain supplier and certain derivative in their latest audit stage.</ins>
 
 |Supplier Name |Derivative Name|Recent Month|T1 Color|T2 Color|T3 Color|Result|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
@@ -50,7 +50,7 @@ Two sample datasets are available for this case study:
 
 		* Result: The color of the current result.
 
-- **Supplier Performance KPIs: Dataset for key supplier performance indicators. The audit experts take some of the KPIs into account when selecting suppliers for audits.**
+- **Supplier Performance KPIs: Dataset for key supplier performance indicators. The audit experts take KPIs into account when selecting suppliers for audits and giving qualification.**
 
 		* SupplierId: The supplier who has records of wrong deliveries, backlogs or LPKM score.
 	
