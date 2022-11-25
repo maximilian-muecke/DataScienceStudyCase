@@ -21,7 +21,7 @@ Colors are used by the audit experts to easily show the qualification of a suppl
 |S1|D1|Mar 2022|Green|Red|-|Red|
 |S1|D1|Apr 2022|Green|Yellow|-|Yellow|
 |S1|D1|May 2022|Green|Yellow|Red|Red|
-|S1|D1|Jun 2022|Green|Green|Green|Green|
+|S1|D1|Jun 2022|Green|Green|Green|<ins>Green</ins>|
 
 ![alt text](https://github.com/ThinkTankBMWGroup/DataScienceStudyCase/blob/main/Example.PNG?raw=true)
 
