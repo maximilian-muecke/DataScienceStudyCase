@@ -70,6 +70,7 @@ Two datasets are available for this case study:
 4. Given the results of the analysis and prediction, how would you show and explain them to the audit experts? What advice would you give to support business decisions?
 
 *Hint: Visulization can be helpful to show your analysis and prediction results.*
+
 *Optional: You can also implement / explain a Causal Machine Learning approach (e.g. python libraries: DoWhy, DECI, PyWhy) to increase the model explainability.*
 
 # Enjoy the task and blow our minds!
