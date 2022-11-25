@@ -13,7 +13,7 @@ Colors are used by the audit experts to easily show the qualification of a suppl
 
 **Example**: 
 
-> An example of a single supplier and a single derivative (the supplier is providing parts for specific types of model car) is shown below for their audit period between February and June 2022. Throughout the stages of their supplier audit process from T1 to T3, the supplier received some qualifications. This supplier was added to T2 after one month of the start of T1, and was added to T3 after another two months, but this timeline does not necessarily apply for other suppliers. This one supplier received a green qualification in their latest audit stage, therefore the result is green. <ins>Your task is to predict the result which is the latest qualification of certain supplier and certain derivative in their latest audit stage.</ins>
+> An example of a single supplier and a single derivative (the supplier is providing parts for specific types of model car) is shown below for their audit period between February and June 2022. Throughout the stages of their supplier audit process from T1 to T3, the supplier received some qualifications. This supplier was added to T2 after one month of the start of T1, and was added to T3 after another two months, but this timeline does not necessarily apply for other suppliers. A supplier does not have to achieve green in one stage to be able to move to the next stage. This one supplier received a green qualification in their latest stage of their latest qualification, therefore the latest result is green. <ins>Your task is to predict the result which is the latest qualification of certain supplier and certain derivative in their latest audit stage.</ins>
 
 |Supplier Name |Derivative Name|Recent Month|T1 Color|T2 Color|T3 Color|Result|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
@@ -26,7 +26,7 @@ Colors are used by the audit experts to easily show the qualification of a suppl
 ![alt text](https://github.com/ThinkTankBMWGroup/DataScienceStudyCase/blob/main/Example.PNG?raw=true)
 
 ## Datasets
-Two datasets are available for this case study:
+Two sample datasets are available for this case study:
 
 - **Audit History: Dataset of supplier audit histories.**
 
@@ -65,9 +65,10 @@ Two datasets are available for this case study:
 ## Tasks
 
 1. Explore the datasets, if necessary clean them, keep and / or create relevant features.
-2. Analyze the features, what statements can you make?
-3. Train a prediction model to predict the most recent results (green, yellow or red) of the supplier audit process (for certain supplier and certain derivative). How good is your model performance? How would you tweak it?
-4. Given the results of the analysis and prediction, how would you show and explain them to the audit experts? What advice would you give to support business decisions?
+2. Analyze the features, what statements can you make? 
+3. Train prediction models to predict the most recent results (green, yellow or red) of the supplier audit process (for certain suppliers and certain derivatives). Note that T1/T2/T3 columns cannot be explicitly used as input features.
+4. How good is the performance of your selected model? How would you tweak it?
+5. Given the results of the analysis and prediction, how would you show and explain them to the audit experts? What advice would you give to support business decisions?
 
 *Hint: Visulization can be helpful to show your analysis and prediction results.*
 
