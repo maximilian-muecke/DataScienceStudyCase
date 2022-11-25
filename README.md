@@ -13,7 +13,7 @@ Colors are used by the audit experts to easily show the qualification of a suppl
 
 **Example**: 
 
-> An example of a single supplier and a single derivative (the type of model car the supplier is supplying) is shown below for their audit period between February and June 2022. Throughout the stages of their supplier audit process from T1 to T3, the supplier received some qualifications. This supplier was added to T2 after one month of the start of T1, and was added to T3 after another two months, but this timeline does not necessarily apply for other suppliers. This one supplier received a green qualification in their latest audit stage, therefore the result is green. Your task is to predict the result which is the latest qualification of certain supplier and certain derivative in their latest audit stage.
+> An example of a single supplier and a single derivative (the supplier is providing parts for specific types of model car) is shown below for their audit period between February and June 2022. Throughout the stages of their supplier audit process from T1 to T3, the supplier received some qualifications. This supplier was added to T2 after one month of the start of T1, and was added to T3 after another two months, but this timeline does not necessarily apply for other suppliers. This one supplier received a green qualification in their latest audit stage, therefore the result is green. <ins>Your task is to predict the result which is the latest qualification of certain supplier and certain derivative in their latest audit stage.</ins>
 
 |Supplier Name |Derivative Name|Recent Month|T1 Color|T2 Color|T3 Color|Result|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
@@ -36,7 +36,7 @@ Two datasets are available for this case study:
 
 		* RecentTimeStamp: The time when the audit is conducted.
 
-		* DerivativeName: The type of model car the supplier is supplying for. One supplier can supply for different model cars.
+		* DerivativeName: The type of model car the supplier is providing parts for. One supplier can supply for different types of cars.
 
 		* DerivativeRegion: The region where the derivative is in production.
 
@@ -50,7 +50,7 @@ Two datasets are available for this case study:
 
 		* Result: The color of the current result.
 
-- **Supplier Performance KPIs: Dataset for key supplier performance indicators.**
+- **Supplier Performance KPIs: Dataset for key supplier performance indicators. The audit experts take some of the KPIs into account when selecting suppliers for audits.**
 
 		* SupplierId: The supplier who has records of wrong deliveries, backlogs or LPKM score.
 	
@@ -58,16 +58,16 @@ Two datasets are available for this case study:
 
 		* Amount_Backlogs_3M, Amount_Backlogs_6M, Amount_Backlogs_12M: Backlogs happen when suppliers cannot deliver parts on time. These features are the amount of backlogs in the last 3 months, 6 months or 12 months for each supplier.
 
-		* 12_Month_LPKM: LPKM score is the grade of the supplier regarding the KPIs for the last 12 months (the higher the better).
+		* 12_Month_LPKM: LPKM score is a 5-star rating of the supplier regarding the KPIs for the last 12 months (the higher the better).
 
 		* BadSupplierIndicator: Indicator of whether the supplier has bad performance before.
 
 ## Tasks
 
-1. Explore the datasets, if necessary clean them and create relevant features.
+1. Explore the datasets, if necessary clean them, keep and / or create relevant features.
 2. Analyze the features, what statements can you make?
-3. Train a prediction model to predict the most recent results (green, yellow or red) of the supplier audit process. How good is your model performance? How would you tweak it?
-4. Given the results of the analysis and prediction, how would you explain them to the audit experts? What advice would you give to support business decisions?
+3. Train a prediction model to predict the most recent results (green, yellow or red) of the supplier audit process (for certain supplier and certain derivative). How good is your model performance? How would you tweak it?
+4. Given the results of the analysis and prediction, how would you show and explain them to the audit experts? What advice would you give to support business decisions?
 
 *Optional: You can also implement / explain a Causal Machine Learning approach (e.g. python libraries: DoWhy, DECI, PyWhy) to increase the model explainability.*
 
