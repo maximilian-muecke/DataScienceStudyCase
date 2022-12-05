@@ -1,0 +1,416 @@
+---
+Title: "Data Science Case Study: Supplier Audit Results Prediction"
+format: 
+  html:
+    code-fold: true
+    code-link: true
+    code-tools: true
+    df-print: paged
+---
+
+# Data Science Case Study: Supplier Audit Results Prediction
+
+```{r}
+#| label: load-packages
+#| include: false
+
+library(dplyr)
+library(ggplot2)
+```
+
+```{r}
+#| label: import-clean-data
+#| echo: false
+#| warning: false
+
+import_data <- function(path) {
+  audit_history <- readr::read_csv(
+    file = paste0(path, "AuditHistory.csv"),
+    show_col_types = FALSE
+  )
+  supplier_performance <- readr::read_csv(
+    file = paste0(path, "SupplierPerformance.csv"),
+    show_col_types = FALSE
+  )
+  audit_history <- audit_history %>%
+    inner_join(supplier_performance, by = "SupplierId")
+  clean_names <- janitor::make_clean_names(names(audit_history))
+  clean_names[[17]] <- "lpkm_12m"
+  setNames(audit_history, clean_names)
+}
+
+clean_cols <- function(df) {
+  df %>%
+    mutate(
+      recent_month = lubridate::ym(recent_month),
+      supplier_id = as.factor(supplier_id),
+      bad_supplier_indicator = ifelse(is.na(bad_supplier_indicator), 0, 1),
+      across(t1color:t3color, ~ ifelse (.x == "-", NA, .x)),
+      across(where(is.character), as.factor)
+    ) %>% 
+    distinct()
+}
+
+supplier <- import_data("../Data/") %>% 
+  clean_cols()
+```
+
+## Data
+
+```{r}
+#| warning: false
+summary(supplier) %>%
+  knitr::kable()
+```
+
+### Issues
+
+```{r}
+#| label: missing-overview
+vapply(supplier, function(x) sum(is.na(x)), numeric(1)) %>% 
+  tibble::enframe(name = "column", value = "missing")
+```
+
+- `t1color`, `t2color`, `t3color` cols are being dropped i.e. missing has no effect
+- `derivative_region` missing for three distinct suppliers, i.e. cannot recreate -> not dropping and using NAs as extra region class
+
+### Date range
+
+```{r}
+date_max <- max(supplier$recent_month)
+date_min <- min(supplier$recent_month)
+missing_date_range <- supplier %>%
+  group_by(supplier_id) %>%
+  summarise(date_min = min(recent_month), date_max = max(recent_month)) %>%
+  filter(date_min != !!date_min | date_max != !!date_max)
+missing_date_range
+```
+
+There are `r nrow(missing_date_range)` of `r nrow(supplier)` observations not in the date range of `r date_min` and `r date_max`. Needs to be consider for models that require same panel size.
+
+### Missing data
+
+#### Missing region
+
+```{r}
+#| label: missing-region
+supplier %>% 
+  group_by(recent_month, supplier_id) %>% 
+  filter(is.na(derivative_region)) %>% 
+  ungroup() %>% 
+  select(derivative_name) %>% 
+  distinct()
+```
+
+#### Missing lpkm_12m
+
+```{r}
+#| label: missing-lpkm_12m
+missing_lpkm <- supplier %>% 
+  filter(is.na(lpkm_12m)) %>% 
+  select(supplier_id) %>% 
+  distinct()
+print(missing_lpkm)
+
+all_lpkm_missing <- vapply(pull(missing_lpkm), function(x) {
+  supplier %>% 
+    filter(supplier_id == !!x) %>% 
+    pull(lpkm_12m) %>% 
+    is.na() %>% 
+    all()
+}, logical(1)) %>% 
+  all()
+```
+
+- 6 suppliers have missing `lpkm_12m` values.
+- Every supplier that has missing `lpkm_12m` values, has all of them missing.
+- Imputing with rolling mean.
+
+### Assocation Matrix with Cramer's V score
+
+```{r}
+#| lable: cramerv-plot
+supplier_sub <- supplier %>% select(-c(t1color, t2color, t3color))
+corrplot::corrplot(DescTools::PairApply(supplier_sub, DescTools::CramerV))
+```
+
+## Result variable
+
+```{r}
+#| warning: false
+result_summary <- summary(supplier$result)
+green_perc <- result_summary["Green"] / sum(result_summary)
+
+supplier %>%
+  ggplot(aes(result)) +
+    geom_histogram(stat = "count", fill = c("darkgreen", "darkred", "yellow")) +
+    theme_minimal() +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    labs(
+      title = "Distribution supplier audit results across all suppliers",
+      x = "Supplier Audit Result",
+      y = "Count"
+    )
+```
+
+Target variable is highly imbalanced with `r green_perc`% being green, i.e. indicates that the suppliers are qualified in the current audit process with a much higher degree.
+
+## Supplier derivative relationship
+
+### Derivatives with missing derivative region
+
+```{r}
+supplier %>%
+  filter(is.na(derivative_region)) %>%
+  select(derivative_name) %>%
+  distinct()
+```
+
+### Result vs. derivative region
+
+```{r}
+ggplot(supplier) +
+  geom_bar(aes(x = result, fill = derivative_region)) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(
+    title = "Distribution supplier audit results across regions",
+    x = "Supplier Audit Result",
+    y = "Count",
+    fill = "Derivative Region"
+  )
+```
+
+```{r}
+#| fig-width: 10
+#| fig-height: 10
+vcd::mosaic(
+  result ~ derivative_region,
+  data = supplier,
+  main = "Results vs. Region",
+  labeling_args = list(
+    set_varnames = c(result = "Result", derivative_region = "Region")
+  )
+)
+```
+
+## Seasonal effects
+
+```{r}
+supplier %>%
+  group_by(recent_month, result) %>%
+  tally() %>%
+  ggplot() +
+  geom_line(aes(y = n, x = recent_month, color = result)) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(
+     title = "Supplier audit results across time",
+     x = "Month",
+     y = "Count",
+     color = "Supplier Audit Result"
+   )
+```
+
+```{r}
+supplier %>%
+  group_by(recent_month, derivative_region, result) %>%
+  tally() %>%
+  ggplot() +
+  geom_line(aes(y = n, x = recent_month, color = derivative_region)) +
+  facet_wrap(~ result) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(
+    title = "Supplier audit results across time and derivative regions",
+    x = "Month",
+    y = "Count",
+    color = "Derivative Region"
+  )
+```
+
+```{r}
+supplier %>%
+  group_by(recent_month, production_line, result) %>%
+  tally() %>%
+  ggplot() +
+  geom_line(aes(y = n, x = recent_month, color = production_line)) +
+  facet_wrap(~ result) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(
+    title = "Supplier audit results across time and derivative regions",
+    x = "Month",
+    y = "Count",
+    color = "Production Line"
+  )
+```
+
+## Prediction Model
+
+```{r}
+#| label: feature-engineering
+
+add_date_feat <- function(df) {
+  # year has no information gain since data is strictly 2022
+  df %>%   
+    mutate(
+      month = as.factor(lubridate::month(recent_month)),
+      quarter = as.factor(lubridate::quarter(recent_month))
+    )
+}
+
+add_interaction <- function(df) {
+  df %>% 
+    mutate(
+      region_production = as.factor(paste0(derivative_region, production_line))
+    )
+}
+
+add_count <- function(df) {
+  region_count <- df %>% 
+    select(supplier_id, derivative_region) %>% 
+    distinct() %>% 
+    group_by(supplier_id) %>% 
+    count() %>% 
+    rename(region_count = n)
+  name_count <- df %>% 
+    select(supplier_id, derivative_name) %>% 
+    distinct() %>% 
+    group_by(supplier_id) %>% 
+    count() %>% 
+    rename(name_count = n)
+  production_count <- df %>% 
+    select(supplier_id, production_line) %>% 
+    distinct() %>% 
+    group_by(supplier_id) %>% 
+    count() %>% 
+    rename(production_count = n)
+  
+  df %>% 
+    inner_join(region_count, by = "supplier_id") %>% 
+    inner_join(name_count, by = "supplier_id") %>% 
+    inner_join(production_count, by = "supplier_id")
+}
+
+apply_lags <- function(df, lag = 1) {
+  # only one derivative_region and production_line per derivative_name
+  cols <- c(
+    "amount_wd_3m", "amount_wd_6m", "amount_wd_12m",
+    "amount_backlogs_3m", "amount_backlogs_6m", "amount_backlogs_12m",
+    "lpkm_12m", "bad_supplier_indicator"
+  )
+  df %>%
+    group_by(supplier_id, derivative_name) %>% 
+    mutate(
+      across(all_of(cols), ~ lag(.x, n = lag, order_by = recent_month), .names = "lag_{.col}"),
+      lag_1_result = lag(result, n = 1, order_by = recent_month),
+      lag_2_result = lag(result, n = 2, order_by = recent_month),
+      lag_3_result = lag(result, n = 3, order_by = recent_month),
+    ) %>% 
+    ungroup() %>% 
+    select(!all_of(cols)) %>% 
+    tidyr::drop_na()
+}
+
+drop_cols <- function(df) {
+  df %>% 
+    select(-c(t1color, t2color, t3color, recent_time_stamp))
+}
+
+remove_missing_date <- function(df) {
+  date_max <- max(df$recent_month)
+  missing <- df %>%
+    group_by(supplier_id) %>%
+    summarise(date_max = max(recent_month)) %>%
+    filter(date_max != !!date_max)
+  df %>%
+    anti_join(missing, by = "supplier_id")
+}
+
+impute_missing <- function(df) {
+  df %>% 
+    group_by(recent_month) %>% 
+    mutate(lpkm_12m = ifelse(!is.na(lpkm_12m), lpkm_12m, mean(lpkm_12m))) %>% 
+    ungroup()
+}
+
+add_static_reals <- function(df) {
+  df %>% 
+    group_by(derivative_region) %>% 
+    mutate(avg_region_rating = mean(lpkm_12m, na.rm = TRUE)) %>%
+    ungroup()
+}
+```
+
+```{r}
+#| label: train-test-data
+
+supplier <- import_data("../Data/") %>%
+  clean_cols() %>% 
+  impute_missing() %>% 
+  drop_cols() %>%
+  add_date_feat() %>%
+  add_interaction() %>% 
+  add_count() %>% 
+  apply_lags() %>% 
+  ungroup()
+  
+train_data <- supplier %>%
+  group_by(supplier_id, derivative_name) %>% 
+  arrange(recent_month) %>% 
+  slice(1:(n() - 1)) %>%
+  ungroup() %>% 
+  select(-c(recent_month))
+
+test_data <- supplier %>%
+  group_by(supplier_id, derivative_name) %>% 
+  arrange(recent_month) %>% 
+  slice(n()) %>%
+  ungroup() %>% 
+  select(-c(recent_month))
+
+task_train <- mlr3::as_task_classif(train_data, target = "result", id = "supplier_id")
+task_test <- mlr3::as_task_classif(test_data, target = "result", id = "supplier_id")
+```
+
+```{r}
+#| label: train-model 
+library(mlr3extralearners)
+
+learner <- mlr3::lrn("classif.lightgbm")
+learner$train(task_train)
+prediction <- learner$predict(task_test)
+```
+### Feature importance
+
+```{r}
+learner$importance() %>% 
+  tibble::enframe(name = "feature", value = "importance")
+```
+
+### Evaluation: Out-of-sample for most recent month on supplier, derivative level
+
+```{r}
+#| label: out-of-sample-prediction
+
+prediction$confusion %>% 
+  knitr::kable(caption = "Confusion Matrix")
+```
+
+
+```{r}
+measures <- mlr3::msrs(c("classif.acc", "classif.logloss"))
+prediction$score(measures) %>% 
+  tibble::enframe(name = "Metric", value = "Value") %>% 
+  mutate(Value = sprintf("%.2f%%", Value * 100))
+```
+
+```{r}
+#| label: accuracy-plot
+#| warning: false
+
+library(mlr3viz)
+
+autoplot(prediction)
+```
