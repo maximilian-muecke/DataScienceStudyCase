@@ -370,8 +370,12 @@ test_data <- supplier %>%
   ungroup() %>% 
   select(-c(recent_month))
 
+all_data <- supplier %>% 
+  select(-c(recent_month))
+
 task_train <- mlr3::as_task_classif(train_data, target = "result", id = "supplier_id")
 task_test <- mlr3::as_task_classif(test_data, target = "result", id = "supplier_id")
+task <- mlr3::as_task_classif(all_data, target = "result", id = "supplier_id")
 ```
 
 ```{r}
@@ -400,7 +404,7 @@ prediction$confusion %>%
 
 
 ```{r}
-measures <- mlr3::msrs(c("classif.acc", "classif.logloss"))
+measures <- mlr3::msrs(c("classif.acc", "classif.ce", "classif.logloss"))
 prediction$score(measures) %>% 
   tibble::enframe(name = "Metric", value = "Value") %>% 
   mutate(Value = sprintf("%.2f%%", Value * 100))
@@ -409,8 +413,18 @@ prediction$score(measures) %>%
 ```{r}
 #| label: accuracy-plot
 #| warning: false
-
 library(mlr3viz)
 
 autoplot(prediction)
+```
+
+```{r}
+#| label: rolling-window-cv
+#| warning: false
+library(mlr3temporal)
+
+resampling <- rsmp("RollingWindowCV", fixed_window = FALSE, horizon = 1, folds = 10)
+rr <- resample(task, learner, resampling, store_models = TRUE) 
+rr$predictions()
+rr$aggregate(msr("classif.acc"))
 ```

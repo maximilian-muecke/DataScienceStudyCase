@@ -116,6 +116,39 @@
       "Hash": "e9c08b94391e9f3f97355841229124f2",
       "Requirements": []
     },
+    "RcppArmadillo": {
+      "Package": "RcppArmadillo",
+      "Version": "0.11.4.2.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "5fa867879a70ed6df6ae4ed7f392fba2",
+      "Requirements": [
+        "Rcpp"
+      ]
+    },
+    "TTR": {
+      "Package": "TTR",
+      "Version": "0.24.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "c553a7be22ec50faaebee27be54a1313",
+      "Requirements": [
+        "curl",
+        "xts",
+        "zoo"
+      ]
+    },
+    "anytime": {
+      "Package": "anytime",
+      "Version": "0.3.9",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "74a64813f17b492da9c6afda6b128e3d",
+      "Requirements": [
+        "BH",
+        "Rcpp"
+      ]
+    },
     "askpass": {
       "Package": "askpass",
       "Version": "1.1",
@@ -452,6 +485,46 @@
       "RemotePkgPlatform": "x86_64-apple-darwin17.0",
       "RemoteSha": "1.1.0",
       "Hash": "77bd60a6157420d4ffa93b27cf6a58b8",
+      "Requirements": []
+    },
+    "fma": {
+      "Package": "fma",
+      "Version": "2.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "5e4e6aca8717b724d9bec0c97e631dff",
+      "Requirements": [
+        "forecast"
+      ]
+    },
+    "forecast": {
+      "Package": "forecast",
+      "Version": "8.19",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "6da2b5fa55eca913cb80faac4ac2cbaf",
+      "Requirements": [
+        "Rcpp",
+        "RcppArmadillo",
+        "colorspace",
+        "fracdiff",
+        "generics",
+        "ggplot2",
+        "lmtest",
+        "magrittr",
+        "nnet",
+        "timeDate",
+        "tseries",
+        "urca",
+        "zoo"
+      ]
+    },
+    "fracdiff": {
+      "Package": "fracdiff",
+      "Version": "1.5-2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "29ad86f09d8f4c8d401d7ff000333651",
       "Requirements": []
     },
     "fs": {
@@ -924,6 +997,31 @@
         "digest"
       ]
     },
+    "mlr3temporal": {
+      "Package": "mlr3temporal",
+      "Version": "0.1.0.9000",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "mlr-org",
+      "RemoteRepo": "mlr3temporal",
+      "RemoteRef": "main",
+      "RemoteSha": "f7c6a6122034f826ea8f3555f7ef5722a5e46055",
+      "Hash": "7eafcfc084fc1e4c8adf0ffe8546045e",
+      "Requirements": [
+        "R6",
+        "checkmate",
+        "data.table",
+        "digest",
+        "fma",
+        "forecast",
+        "ggplot2",
+        "mlr3",
+        "mlr3misc",
+        "paradox",
+        "tsbox"
+      ]
+    },
     "mlr3viz": {
       "Package": "mlr3viz",
       "Version": "0.5.10",
@@ -978,6 +1076,14 @@
       "Requirements": [
         "lattice"
       ]
+    },
+    "nnet": {
+      "Package": "nnet",
+      "Version": "7.3-18",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "170da2130d5332bea7d6ede01875ba1d",
+      "Requirements": []
     },
     "openssl": {
       "Package": "openssl",
@@ -1105,6 +1211,27 @@
       "Requirements": [
         "magrittr",
         "rlang"
+      ]
+    },
+    "quadprog": {
+      "Package": "quadprog",
+      "Version": "1.5-8",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "5f919ae5e7f83a6f91dcf2288943370d",
+      "Requirements": []
+    },
+    "quantmod": {
+      "Package": "quantmod",
+      "Version": "0.4.20",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "e8c1ef1a6bc7ea89c1801ab4994b87bb",
+      "Requirements": [
+        "TTR",
+        "curl",
+        "xts",
+        "zoo"
       ]
     },
     "rappdirs": {
@@ -1340,6 +1467,14 @@
         "withr"
       ]
     },
+    "timeDate": {
+      "Package": "timeDate",
+      "Version": "4021.106",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "e2a8ef841df64f3ec7af2dc09001af65",
+      "Requirements": []
+    },
     "tinytex": {
       "Package": "tinytex",
       "Version": "0.41",
@@ -1348,6 +1483,29 @@
       "Hash": "6edfe5df6431a724b4254c0591e34ab3",
       "Requirements": [
         "xfun"
+      ]
+    },
+    "tsbox": {
+      "Package": "tsbox",
+      "Version": "0.3.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "6452e79b1ea5c78bdc9e31c12667591f",
+      "Requirements": [
+        "anytime",
+        "data.table"
+      ]
+    },
+    "tseries": {
+      "Package": "tseries",
+      "Version": "0.10-52",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "1fd42a48685d30a131e729a8f2550d56",
+      "Requirements": [
+        "quadprog",
+        "quantmod",
+        "zoo"
       ]
     },
     "tzdb": {
@@ -1364,6 +1522,16 @@
       "Hash": "b2e1cbce7c903eaf23ec05c58e59fb5e",
       "Requirements": [
         "cpp11"
+      ]
+    },
+    "urca": {
+      "Package": "urca",
+      "Version": "1.3-3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "efec213571f99114c63562e4c076ac25",
+      "Requirements": [
+        "nlme"
       ]
     },
     "utf8": {
@@ -1489,6 +1657,16 @@
       "Repository": "CRAN",
       "Hash": "0498af3034691dde715dcd86198efe75",
       "Requirements": []
+    },
+    "xts": {
+      "Package": "xts",
+      "Version": "0.12.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "6731cbcbe2f9633865b59392aee7966d",
+      "Requirements": [
+        "zoo"
+      ]
     },
     "yaml": {
       "Package": "yaml",
