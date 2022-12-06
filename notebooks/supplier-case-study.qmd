@@ -348,6 +348,7 @@ add_static_reals <- function(df) {
 supplier <- import_data("../Data/") %>%
   clean_cols() %>% 
   impute_missing() %>% 
+  remove_missing_date() %>% 
   drop_cols() %>%
   add_date_feat() %>%
   add_interaction() %>% 
@@ -356,21 +357,12 @@ supplier <- import_data("../Data/") %>%
   ungroup()
   
 train_data <- supplier %>%
-  group_by(supplier_id, derivative_name) %>% 
-  arrange(recent_month) %>% 
-  slice(1:(n() - 1)) %>%
-  ungroup() %>% 
-  select(-c(recent_month))
+  filter(recent_month < "2022-10-01") %>% 
+  select(-recent_month)
 
 test_data <- supplier %>%
-  group_by(supplier_id, derivative_name) %>% 
-  arrange(recent_month) %>% 
-  slice(n()) %>%
-  ungroup() %>% 
-  select(-c(recent_month))
-
-all_data <- supplier %>% 
-  select(-c(recent_month))
+  filter(recent_month >= "2022-10-01") %>% 
+  select(-recent_month)
 ```
 
 ```{r}
@@ -380,7 +372,7 @@ library(mlr3extralearners)
 
 task_train <- as_task_classif(train_data, target = "result", id = "supplier_id")
 task_test <- as_task_classif(test_data, target = "result", id = "supplier_id")
-task <- as_task_classif(all_data, target = "result", id = "supplier_id")
+task <- as_task_classif(select(supplier, -recent_month), target = "result", id = "supplier_id")
 
 learner <- lrn("classif.lightgbm")
 learner$train(task_train)
@@ -426,8 +418,8 @@ library("DALEX")
 library("DALEXtra")
 
 lgbm_exp <- explain_mlr3(learner,
-  data = all_data,
-  y = as.integer(all_data$result),
+  data = supplier %>% select(-recent_month),
+  y = as.integer(supplier$result),
   label = "LGBM",
   colorize = TRUE 
 )

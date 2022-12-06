@@ -703,29 +703,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>supplier <span class="ot">&lt;-</span> <span class="fu">import_data</span>(<span class="st">"../Data/"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_cols</span>() <span class="sc">%&gt;%</span> </span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">impute_missing</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_cols</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_date_feat</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_interaction</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_count</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply_lags</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> supplier <span class="sc">%&gt;%</span></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(supplier_id, derivative_name) <span class="sc">%&gt;%</span> </span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(recent_month) <span class="sc">%&gt;%</span> </span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span>(<span class="fu">n</span>() <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(recent_month))</span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> supplier <span class="sc">%&gt;%</span></span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(supplier_id, derivative_name) <span class="sc">%&gt;%</span> </span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(recent_month) <span class="sc">%&gt;%</span> </span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(recent_month))</span>
-<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>all_data <span class="ot">&lt;-</span> supplier <span class="sc">%&gt;%</span> </span>
-<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(recent_month))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">remove_missing_date</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_cols</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_date_feat</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_interaction</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_count</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply_lags</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> supplier <span class="sc">%&gt;%</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(recent_month <span class="sc">&lt;</span> <span class="st">"2022-10-01"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>recent_month)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> supplier <span class="sc">%&gt;%</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(recent_month <span class="sc">&gt;=</span> <span class="st">"2022-10-01"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>recent_month)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
@@ -736,7 +728,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>task_train <span class="ot">&lt;-</span> <span class="fu">as_task_classif</span>(train_data, <span class="at">target =</span> <span class="st">"result"</span>, <span class="at">id =</span> <span class="st">"supplier_id"</span>)</span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>task_test <span class="ot">&lt;-</span> <span class="fu">as_task_classif</span>(test_data, <span class="at">target =</span> <span class="st">"result"</span>, <span class="at">id =</span> <span class="st">"supplier_id"</span>)</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>task <span class="ot">&lt;-</span> <span class="fu">as_task_classif</span>(all_data, <span class="at">target =</span> <span class="st">"result"</span>, <span class="at">id =</span> <span class="st">"supplier_id"</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>task <span class="ot">&lt;-</span> <span class="fu">as_task_classif</span>(<span class="fu">select</span>(supplier, <span class="sc">-</span>recent_month), <span class="at">target =</span> <span class="st">"result"</span>, <span class="at">id =</span> <span class="st">"supplier_id"</span>)</span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>learner <span class="ot">&lt;-</span> <span class="fu">lrn</span>(<span class="st">"classif.lightgbm"</span>)</span>
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>learner<span class="sc">$</span><span class="fu">train</span>(task_train)</span>
@@ -755,7 +747,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["feature"],"name":[1],"type":["chr"],"align":["left"]},{"label":["importance"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"lag_1_result","2":"0.3789156335"},{"1":"supplier_id","2":"0.2536835232"},{"1":"lag_3_result","2":"0.0720276388"},{"1":"lag_2_result","2":"0.0501954460"},{"1":"quarter","2":"0.0477518562"},{"1":"lag_lpkm_12m","2":"0.0453986983"},{"1":"lag_amount_backlogs_12m","2":"0.0325868974"},{"1":"lag_amount_backlogs_3m","2":"0.0227948980"},{"1":"lag_amount_wd_12m","2":"0.0208569570"},{"1":"lag_amount_wd_3m","2":"0.0154806289"},{"1":"lag_amount_backlogs_6m","2":"0.0151717027"},{"1":"name_count","2":"0.0129391323"},{"1":"month","2":"0.0088433693"},{"1":"derivative_name","2":"0.0086680729"},{"1":"lag_amount_wd_6m","2":"0.0074752046"},{"1":"lag_bad_supplier_indicator","2":"0.0038843971"},{"1":"region_count","2":"0.0019962257"},{"1":"production_count","2":"0.0010939967"},{"1":"region_production","2":"0.0002357214"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["feature"],"name":[1],"type":["chr"],"align":["left"]},{"label":["importance"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"lag_1_result","2":"0.3560249302"},{"1":"supplier_id","2":"0.2779699789"},{"1":"lag_3_result","2":"0.0775895482"},{"1":"quarter","2":"0.0487955060"},{"1":"lag_2_result","2":"0.0468795357"},{"1":"lag_lpkm_12m","2":"0.0442287084"},{"1":"lag_amount_backlogs_12m","2":"0.0300762899"},{"1":"lag_amount_backlogs_3m","2":"0.0189117678"},{"1":"name_count","2":"0.0187810934"},{"1":"lag_amount_backlogs_6m","2":"0.0148491954"},{"1":"lag_amount_wd_12m","2":"0.0144603867"},{"1":"lag_amount_wd_3m","2":"0.0118982800"},{"1":"region_count","2":"0.0092937608"},{"1":"derivative_name","2":"0.0083287991"},{"1":"month","2":"0.0079650621"},{"1":"lag_amount_wd_6m","2":"0.0079280578"},{"1":"lag_bad_supplier_indicator","2":"0.0042059866"},{"1":"production_count","2":"0.0012664880"},{"1":"region_production","2":"0.0005466248"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -783,21 +775,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Green</td>
-<td style="text-align: right;">702</td>
-<td style="text-align: right;">13</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: right;">707</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">6</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Red</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">32</td>
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">1</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Yellow</td>
+<td style="text-align: right;">5</td>
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">6</td>
+<td style="text-align: right;">5</td>
 </tr>
 </tbody>
 </table>
@@ -815,7 +807,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["Metric"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Value"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"classif.acc","2":"96.35%"},{"1":"classif.ce","2":"3.65%"},{"1":"classif.logloss","2":"24.82%"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["Metric"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Value"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"classif.acc","2":"94.18%"},{"1":"classif.ce","2":"5.82%"},{"1":"classif.logloss","2":"38.55%"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -841,8 +833,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"DALEXtra"</span>)</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>lgbm_exp <span class="ot">&lt;-</span> <span class="fu">explain_mlr3</span>(learner,</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> all_data,</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">as.integer</span>(all_data<span class="sc">$</span>result),</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> supplier <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>recent_month),</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">as.integer</span>(supplier<span class="sc">$</span>result),</span>
 <span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">label =</span> <span class="st">"LGBM"</span>,</span>
 <span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">colorize =</span> <span class="cn">TRUE</span> </span>
 <span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -850,9 +842,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell-output cell-output-stdout">
 <pre><code>Preparation of a new explainer is initiated
   -&gt; model label       :  LGBM 
-  -&gt; data              :  4166  rows  22  cols 
+  -&gt; data              :  4143  rows  22  cols 
   -&gt; data              :  tibble converted into a data.frame 
-  -&gt; target variable   :  4166  values 
+  -&gt; target variable   :  4143  values 
   -&gt; predict function  :  yhat.LearnerClassif  will be used ( [33m default [39m )
   -&gt; predicted values  :  No value for predict function target column. ( [33m default [39m )
   -&gt; model_info        :  package mlr3 , ver. 0.14.1 , task multiclass ( [33m default [39m ) 
@@ -874,7 +866,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["permutation"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["dropout_loss"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["label"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"_full_model_","2":"0","3":"51.64986","4":"LGBM","_rn_":"1"},{"1":"lag_amount_wd_12m","2":"0","3":"51.29783","4":"LGBM","_rn_":"2"},{"1":"region_count","2":"0","3":"51.39274","4":"LGBM","_rn_":"3"},{"1":"lag_amount_wd_6m","2":"0","3":"51.51069","4":"LGBM","_rn_":"4"},{"1":"production_count","2":"0","3":"51.62592","4":"LGBM","_rn_":"5"},{"1":"derivative_region","2":"0","3":"51.64986","4":"LGBM","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["permutation"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["dropout_loss"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["label"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"_full_model_","2":"0","3":"62.39724","4":"LGBM","_rn_":"1"},{"1":"region_count","2":"0","3":"61.86329","4":"LGBM","_rn_":"2"},{"1":"derivative_region","2":"0","3":"62.39724","4":"LGBM","_rn_":"3"},{"1":"production_line","2":"0","3":"62.39724","4":"LGBM","_rn_":"4"},{"1":"result","2":"0","3":"62.39724","4":"LGBM","_rn_":"5"},{"1":"region_production","2":"0","3":"62.40409","4":"LGBM","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -1410,108 +1402,100 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb28-382"><a href="#cb28-382" aria-hidden="true" tabindex="-1"></a>supplier <span class="ot">&lt;-</span> <span class="fu">import_data</span>(<span class="st">"../Data/"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb28-383"><a href="#cb28-383" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_cols</span>() <span class="sc">%&gt;%</span> </span>
 <span id="cb28-384"><a href="#cb28-384" aria-hidden="true" tabindex="-1"></a>  <span class="fu">impute_missing</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb28-385"><a href="#cb28-385" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_cols</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb28-386"><a href="#cb28-386" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_date_feat</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb28-387"><a href="#cb28-387" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_interaction</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb28-388"><a href="#cb28-388" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_count</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb28-389"><a href="#cb28-389" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply_lags</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb28-390"><a href="#cb28-390" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
-<span id="cb28-391"><a href="#cb28-391" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb28-392"><a href="#cb28-392" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> supplier <span class="sc">%&gt;%</span></span>
-<span id="cb28-393"><a href="#cb28-393" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(supplier_id, derivative_name) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-394"><a href="#cb28-394" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(recent_month) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-395"><a href="#cb28-395" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span>(<span class="fu">n</span>() <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb28-396"><a href="#cb28-396" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb28-397"><a href="#cb28-397" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(recent_month))</span>
-<span id="cb28-398"><a href="#cb28-398" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-399"><a href="#cb28-399" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> supplier <span class="sc">%&gt;%</span></span>
-<span id="cb28-400"><a href="#cb28-400" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(supplier_id, derivative_name) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-401"><a href="#cb28-401" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(recent_month) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-402"><a href="#cb28-402" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb28-403"><a href="#cb28-403" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb28-404"><a href="#cb28-404" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(recent_month))</span>
-<span id="cb28-405"><a href="#cb28-405" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-406"><a href="#cb28-406" aria-hidden="true" tabindex="-1"></a>all_data <span class="ot">&lt;-</span> supplier <span class="sc">%&gt;%</span> </span>
-<span id="cb28-407"><a href="#cb28-407" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(recent_month))</span>
-<span id="cb28-408"><a href="#cb28-408" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-409"><a href="#cb28-409" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-412"><a href="#cb28-412" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-413"><a href="#cb28-413" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: train-model </span></span>
-<span id="cb28-414"><a href="#cb28-414" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3)</span>
-<span id="cb28-415"><a href="#cb28-415" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3extralearners)</span>
-<span id="cb28-416"><a href="#cb28-416" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-417"><a href="#cb28-417" aria-hidden="true" tabindex="-1"></a>task_train <span class="ot">&lt;-</span> <span class="fu">as_task_classif</span>(train_data, <span class="at">target =</span> <span class="st">"result"</span>, <span class="at">id =</span> <span class="st">"supplier_id"</span>)</span>
-<span id="cb28-418"><a href="#cb28-418" aria-hidden="true" tabindex="-1"></a>task_test <span class="ot">&lt;-</span> <span class="fu">as_task_classif</span>(test_data, <span class="at">target =</span> <span class="st">"result"</span>, <span class="at">id =</span> <span class="st">"supplier_id"</span>)</span>
-<span id="cb28-419"><a href="#cb28-419" aria-hidden="true" tabindex="-1"></a>task <span class="ot">&lt;-</span> <span class="fu">as_task_classif</span>(all_data, <span class="at">target =</span> <span class="st">"result"</span>, <span class="at">id =</span> <span class="st">"supplier_id"</span>)</span>
-<span id="cb28-420"><a href="#cb28-420" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-421"><a href="#cb28-421" aria-hidden="true" tabindex="-1"></a>learner <span class="ot">&lt;-</span> <span class="fu">lrn</span>(<span class="st">"classif.lightgbm"</span>)</span>
-<span id="cb28-422"><a href="#cb28-422" aria-hidden="true" tabindex="-1"></a>learner<span class="sc">$</span><span class="fu">train</span>(task_train)</span>
-<span id="cb28-423"><a href="#cb28-423" aria-hidden="true" tabindex="-1"></a>prediction <span class="ot">&lt;-</span> learner<span class="sc">$</span><span class="fu">predict</span>(task_test)</span>
+<span id="cb28-385"><a href="#cb28-385" aria-hidden="true" tabindex="-1"></a>  <span class="fu">remove_missing_date</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb28-386"><a href="#cb28-386" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_cols</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb28-387"><a href="#cb28-387" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_date_feat</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb28-388"><a href="#cb28-388" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_interaction</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb28-389"><a href="#cb28-389" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_count</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb28-390"><a href="#cb28-390" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply_lags</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb28-391"><a href="#cb28-391" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb28-392"><a href="#cb28-392" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-393"><a href="#cb28-393" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> supplier <span class="sc">%&gt;%</span></span>
+<span id="cb28-394"><a href="#cb28-394" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(recent_month <span class="sc">&lt;</span> <span class="st">"2022-10-01"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-395"><a href="#cb28-395" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>recent_month)</span>
+<span id="cb28-396"><a href="#cb28-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-397"><a href="#cb28-397" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> supplier <span class="sc">%&gt;%</span></span>
+<span id="cb28-398"><a href="#cb28-398" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(recent_month <span class="sc">&gt;=</span> <span class="st">"2022-10-01"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-399"><a href="#cb28-399" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>recent_month)</span>
+<span id="cb28-400"><a href="#cb28-400" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-401"><a href="#cb28-401" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-404"><a href="#cb28-404" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-405"><a href="#cb28-405" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: train-model </span></span>
+<span id="cb28-406"><a href="#cb28-406" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3)</span>
+<span id="cb28-407"><a href="#cb28-407" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3extralearners)</span>
+<span id="cb28-408"><a href="#cb28-408" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-409"><a href="#cb28-409" aria-hidden="true" tabindex="-1"></a>task_train <span class="ot">&lt;-</span> <span class="fu">as_task_classif</span>(train_data, <span class="at">target =</span> <span class="st">"result"</span>, <span class="at">id =</span> <span class="st">"supplier_id"</span>)</span>
+<span id="cb28-410"><a href="#cb28-410" aria-hidden="true" tabindex="-1"></a>task_test <span class="ot">&lt;-</span> <span class="fu">as_task_classif</span>(test_data, <span class="at">target =</span> <span class="st">"result"</span>, <span class="at">id =</span> <span class="st">"supplier_id"</span>)</span>
+<span id="cb28-411"><a href="#cb28-411" aria-hidden="true" tabindex="-1"></a>task <span class="ot">&lt;-</span> <span class="fu">as_task_classif</span>(<span class="fu">select</span>(supplier, <span class="sc">-</span>recent_month), <span class="at">target =</span> <span class="st">"result"</span>, <span class="at">id =</span> <span class="st">"supplier_id"</span>)</span>
+<span id="cb28-412"><a href="#cb28-412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-413"><a href="#cb28-413" aria-hidden="true" tabindex="-1"></a>learner <span class="ot">&lt;-</span> <span class="fu">lrn</span>(<span class="st">"classif.lightgbm"</span>)</span>
+<span id="cb28-414"><a href="#cb28-414" aria-hidden="true" tabindex="-1"></a>learner<span class="sc">$</span><span class="fu">train</span>(task_train)</span>
+<span id="cb28-415"><a href="#cb28-415" aria-hidden="true" tabindex="-1"></a>prediction <span class="ot">&lt;-</span> learner<span class="sc">$</span><span class="fu">predict</span>(task_test)</span>
+<span id="cb28-416"><a href="#cb28-416" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-417"><a href="#cb28-417" aria-hidden="true" tabindex="-1"></a><span class="fu">### Feature importance</span></span>
+<span id="cb28-418"><a href="#cb28-418" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-421"><a href="#cb28-421" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-422"><a href="#cb28-422" aria-hidden="true" tabindex="-1"></a>learner<span class="sc">$</span><span class="fu">importance</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb28-423"><a href="#cb28-423" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">enframe</span>(<span class="at">name =</span> <span class="st">"feature"</span>, <span class="at">value =</span> <span class="st">"importance"</span>)</span>
 <span id="cb28-424"><a href="#cb28-424" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-425"><a href="#cb28-425" aria-hidden="true" tabindex="-1"></a><span class="fu">### Feature importance</span></span>
-<span id="cb28-426"><a href="#cb28-426" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-429"><a href="#cb28-429" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-430"><a href="#cb28-430" aria-hidden="true" tabindex="-1"></a>learner<span class="sc">$</span><span class="fu">importance</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb28-431"><a href="#cb28-431" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">enframe</span>(<span class="at">name =</span> <span class="st">"feature"</span>, <span class="at">value =</span> <span class="st">"importance"</span>)</span>
-<span id="cb28-432"><a href="#cb28-432" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-433"><a href="#cb28-433" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-434"><a href="#cb28-434" aria-hidden="true" tabindex="-1"></a><span class="fu">### Evaluation: Out-of-sample for most recent month on supplier, derivative level</span></span>
-<span id="cb28-435"><a href="#cb28-435" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-438"><a href="#cb28-438" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-439"><a href="#cb28-439" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: out-of-sample-prediction</span></span>
-<span id="cb28-440"><a href="#cb28-440" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-441"><a href="#cb28-441" aria-hidden="true" tabindex="-1"></a>prediction<span class="sc">$</span>confusion <span class="sc">%&gt;%</span> </span>
-<span id="cb28-442"><a href="#cb28-442" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Confusion Matrix"</span>)</span>
-<span id="cb28-443"><a href="#cb28-443" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-444"><a href="#cb28-444" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-445"><a href="#cb28-445" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-448"><a href="#cb28-448" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-449"><a href="#cb28-449" aria-hidden="true" tabindex="-1"></a>measures <span class="ot">&lt;-</span> <span class="fu">msrs</span>(<span class="fu">c</span>(<span class="st">"classif.acc"</span>, <span class="st">"classif.ce"</span>, <span class="st">"classif.logloss"</span>))</span>
-<span id="cb28-450"><a href="#cb28-450" aria-hidden="true" tabindex="-1"></a>prediction<span class="sc">$</span><span class="fu">score</span>(measures) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-451"><a href="#cb28-451" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">enframe</span>(<span class="at">name =</span> <span class="st">"Metric"</span>, <span class="at">value =</span> <span class="st">"Value"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-452"><a href="#cb28-452" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Value =</span> <span class="fu">sprintf</span>(<span class="st">"%.2f%%"</span>, Value <span class="sc">*</span> <span class="dv">100</span>))</span>
-<span id="cb28-453"><a href="#cb28-453" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-454"><a href="#cb28-454" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-457"><a href="#cb28-457" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-458"><a href="#cb28-458" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: accuracy-plot</span></span>
-<span id="cb28-459"><a href="#cb28-459" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb28-460"><a href="#cb28-460" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3viz)</span>
-<span id="cb28-461"><a href="#cb28-461" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-462"><a href="#cb28-462" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(prediction)</span>
-<span id="cb28-463"><a href="#cb28-463" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-464"><a href="#cb28-464" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-465"><a href="#cb28-465" aria-hidden="true" tabindex="-1"></a><span class="fu">### Model explaination with DALEX</span></span>
-<span id="cb28-466"><a href="#cb28-466" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-469"><a href="#cb28-469" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-470"><a href="#cb28-470" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb28-471"><a href="#cb28-471" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"DALEX"</span>)</span>
-<span id="cb28-472"><a href="#cb28-472" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"DALEXtra"</span>)</span>
-<span id="cb28-473"><a href="#cb28-473" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-474"><a href="#cb28-474" aria-hidden="true" tabindex="-1"></a>lgbm_exp <span class="ot">&lt;-</span> <span class="fu">explain_mlr3</span>(learner,</span>
-<span id="cb28-475"><a href="#cb28-475" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> all_data,</span>
-<span id="cb28-476"><a href="#cb28-476" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">as.integer</span>(all_data<span class="sc">$</span>result),</span>
-<span id="cb28-477"><a href="#cb28-477" aria-hidden="true" tabindex="-1"></a>  <span class="at">label =</span> <span class="st">"LGBM"</span>,</span>
-<span id="cb28-478"><a href="#cb28-478" aria-hidden="true" tabindex="-1"></a>  <span class="at">colorize =</span> <span class="cn">TRUE</span> </span>
-<span id="cb28-479"><a href="#cb28-479" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb28-480"><a href="#cb28-480" aria-hidden="true" tabindex="-1"></a>supplier_vi <span class="ot">&lt;-</span> <span class="fu">model_parts</span>(lgbm_exp)</span>
-<span id="cb28-481"><a href="#cb28-481" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(supplier_vi)</span>
-<span id="cb28-482"><a href="#cb28-482" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-483"><a href="#cb28-483" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-486"><a href="#cb28-486" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-487"><a href="#cb28-487" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb28-488"><a href="#cb28-488" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(supplier_vi, <span class="at">max_vars =</span> <span class="dv">12</span>, <span class="at">show_boxplots =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb28-489"><a href="#cb28-489" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-490"><a href="#cb28-490" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-493"><a href="#cb28-493" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-494"><a href="#cb28-494" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb28-495"><a href="#cb28-495" aria-hidden="true" tabindex="-1"></a>selected_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb28-496"><a href="#cb28-496" aria-hidden="true" tabindex="-1"></a>  <span class="st">"lag_1_result"</span>, <span class="st">"month"</span>, <span class="st">"quarter"</span>, <span class="st">"derivative_region"</span>, <span class="st">"production_line"</span></span>
-<span id="cb28-497"><a href="#cb28-497" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb28-498"><a href="#cb28-498" aria-hidden="true" tabindex="-1"></a>supplier_pd <span class="ot">&lt;-</span> <span class="fu">model_profile</span>(lgbm_exp, <span class="at">variables =</span> selected_variables)<span class="sc">$</span>agr_profiles</span>
-<span id="cb28-499"><a href="#cb28-499" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-500"><a href="#cb28-500" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(supplier_pd) <span class="sc">+</span></span>
-<span id="cb28-501"><a href="#cb28-501" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Partial Dependence profiles for selected variables"</span>)</span>
-<span id="cb28-502"><a href="#cb28-502" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-425"><a href="#cb28-425" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-426"><a href="#cb28-426" aria-hidden="true" tabindex="-1"></a><span class="fu">### Evaluation: Out-of-sample for most recent month on supplier, derivative level</span></span>
+<span id="cb28-427"><a href="#cb28-427" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-430"><a href="#cb28-430" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-431"><a href="#cb28-431" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: out-of-sample-prediction</span></span>
+<span id="cb28-432"><a href="#cb28-432" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-433"><a href="#cb28-433" aria-hidden="true" tabindex="-1"></a>prediction<span class="sc">$</span>confusion <span class="sc">%&gt;%</span> </span>
+<span id="cb28-434"><a href="#cb28-434" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Confusion Matrix"</span>)</span>
+<span id="cb28-435"><a href="#cb28-435" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-436"><a href="#cb28-436" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-437"><a href="#cb28-437" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-440"><a href="#cb28-440" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-441"><a href="#cb28-441" aria-hidden="true" tabindex="-1"></a>measures <span class="ot">&lt;-</span> <span class="fu">msrs</span>(<span class="fu">c</span>(<span class="st">"classif.acc"</span>, <span class="st">"classif.ce"</span>, <span class="st">"classif.logloss"</span>))</span>
+<span id="cb28-442"><a href="#cb28-442" aria-hidden="true" tabindex="-1"></a>prediction<span class="sc">$</span><span class="fu">score</span>(measures) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-443"><a href="#cb28-443" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">enframe</span>(<span class="at">name =</span> <span class="st">"Metric"</span>, <span class="at">value =</span> <span class="st">"Value"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-444"><a href="#cb28-444" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Value =</span> <span class="fu">sprintf</span>(<span class="st">"%.2f%%"</span>, Value <span class="sc">*</span> <span class="dv">100</span>))</span>
+<span id="cb28-445"><a href="#cb28-445" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-446"><a href="#cb28-446" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-449"><a href="#cb28-449" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-450"><a href="#cb28-450" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: accuracy-plot</span></span>
+<span id="cb28-451"><a href="#cb28-451" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb28-452"><a href="#cb28-452" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3viz)</span>
+<span id="cb28-453"><a href="#cb28-453" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-454"><a href="#cb28-454" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(prediction)</span>
+<span id="cb28-455"><a href="#cb28-455" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-456"><a href="#cb28-456" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-457"><a href="#cb28-457" aria-hidden="true" tabindex="-1"></a><span class="fu">### Model explaination with DALEX</span></span>
+<span id="cb28-458"><a href="#cb28-458" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-461"><a href="#cb28-461" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-462"><a href="#cb28-462" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb28-463"><a href="#cb28-463" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"DALEX"</span>)</span>
+<span id="cb28-464"><a href="#cb28-464" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"DALEXtra"</span>)</span>
+<span id="cb28-465"><a href="#cb28-465" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-466"><a href="#cb28-466" aria-hidden="true" tabindex="-1"></a>lgbm_exp <span class="ot">&lt;-</span> <span class="fu">explain_mlr3</span>(learner,</span>
+<span id="cb28-467"><a href="#cb28-467" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> supplier <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>recent_month),</span>
+<span id="cb28-468"><a href="#cb28-468" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">as.integer</span>(supplier<span class="sc">$</span>result),</span>
+<span id="cb28-469"><a href="#cb28-469" aria-hidden="true" tabindex="-1"></a>  <span class="at">label =</span> <span class="st">"LGBM"</span>,</span>
+<span id="cb28-470"><a href="#cb28-470" aria-hidden="true" tabindex="-1"></a>  <span class="at">colorize =</span> <span class="cn">TRUE</span> </span>
+<span id="cb28-471"><a href="#cb28-471" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-472"><a href="#cb28-472" aria-hidden="true" tabindex="-1"></a>supplier_vi <span class="ot">&lt;-</span> <span class="fu">model_parts</span>(lgbm_exp)</span>
+<span id="cb28-473"><a href="#cb28-473" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(supplier_vi)</span>
+<span id="cb28-474"><a href="#cb28-474" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-475"><a href="#cb28-475" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-478"><a href="#cb28-478" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-479"><a href="#cb28-479" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb28-480"><a href="#cb28-480" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(supplier_vi, <span class="at">max_vars =</span> <span class="dv">12</span>, <span class="at">show_boxplots =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb28-481"><a href="#cb28-481" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-482"><a href="#cb28-482" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-485"><a href="#cb28-485" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-486"><a href="#cb28-486" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb28-487"><a href="#cb28-487" aria-hidden="true" tabindex="-1"></a>selected_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb28-488"><a href="#cb28-488" aria-hidden="true" tabindex="-1"></a>  <span class="st">"lag_1_result"</span>, <span class="st">"month"</span>, <span class="st">"quarter"</span>, <span class="st">"derivative_region"</span>, <span class="st">"production_line"</span></span>
+<span id="cb28-489"><a href="#cb28-489" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-490"><a href="#cb28-490" aria-hidden="true" tabindex="-1"></a>supplier_pd <span class="ot">&lt;-</span> <span class="fu">model_profile</span>(lgbm_exp, <span class="at">variables =</span> selected_variables)<span class="sc">$</span>agr_profiles</span>
+<span id="cb28-491"><a href="#cb28-491" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-492"><a href="#cb28-492" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(supplier_pd) <span class="sc">+</span></span>
+<span id="cb28-493"><a href="#cb28-493" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Partial Dependence profiles for selected variables"</span>)</span>
+<span id="cb28-494"><a href="#cb28-494" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
