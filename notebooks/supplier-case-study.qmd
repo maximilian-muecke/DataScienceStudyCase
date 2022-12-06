@@ -345,7 +345,6 @@ add_static_reals <- function(df) {
 
 ```{r}
 #| label: train-test-data
-
 supplier <- import_data("../Data/") %>%
   clean_cols() %>% 
   impute_missing() %>% 
@@ -372,17 +371,18 @@ test_data <- supplier %>%
 
 all_data <- supplier %>% 
   select(-c(recent_month))
-
-task_train <- mlr3::as_task_classif(train_data, target = "result", id = "supplier_id")
-task_test <- mlr3::as_task_classif(test_data, target = "result", id = "supplier_id")
-task <- mlr3::as_task_classif(all_data, target = "result", id = "supplier_id")
 ```
 
 ```{r}
 #| label: train-model 
+library(mlr3)
 library(mlr3extralearners)
 
-learner <- mlr3::lrn("classif.lightgbm")
+task_train <- as_task_classif(train_data, target = "result", id = "supplier_id")
+task_test <- as_task_classif(test_data, target = "result", id = "supplier_id")
+task <- as_task_classif(all_data, target = "result", id = "supplier_id")
+
+learner <- lrn("classif.lightgbm")
 learner$train(task_train)
 prediction <- learner$predict(task_test)
 ```
@@ -404,7 +404,7 @@ prediction$confusion %>%
 
 
 ```{r}
-measures <- mlr3::msrs(c("classif.acc", "classif.ce", "classif.logloss"))
+measures <- msrs(c("classif.acc", "classif.ce", "classif.logloss"))
 prediction$score(measures) %>% 
   tibble::enframe(name = "Metric", value = "Value") %>% 
   mutate(Value = sprintf("%.2f%%", Value * 100))
@@ -418,13 +418,35 @@ library(mlr3viz)
 autoplot(prediction)
 ```
 
-```{r}
-#| label: rolling-window-cv
-#| warning: false
-library(mlr3temporal)
+### Model explaination with DALEX
 
-resampling <- rsmp("RollingWindowCV", fixed_window = FALSE, horizon = 1, folds = 10)
-rr <- resample(task, learner, resampling, store_models = TRUE) 
-rr$predictions()
-rr$aggregate(msr("classif.acc"))
+```{r}
+#| warning: false
+library("DALEX")
+library("DALEXtra")
+
+lgbm_exp <- explain_mlr3(learner,
+  data = all_data,
+  y = as.integer(all_data$result),
+  label = "LGBM",
+  colorize = TRUE 
+)
+supplier_vi <- model_parts(lgbm_exp)
+head(supplier_vi)
+```
+
+```{r}
+#| warning: false
+plot(supplier_vi, max_vars = 12, show_boxplots = TRUE)
+```
+
+```{r}
+#| warning: false
+selected_variables <- c(
+  "lag_1_result", "month", "quarter", "derivative_region", "production_line"
+)
+supplier_pd <- model_profile(lgbm_exp, variables = selected_variables)$agr_profiles
+
+plot(supplier_pd) +
+  ggtitle("Partial Dependence profiles for selected variables")
 ```
