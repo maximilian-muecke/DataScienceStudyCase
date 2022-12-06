@@ -255,8 +255,8 @@ add_date_feat <- function(df) {
   # year has no information gain since data is strictly 2022
   df %>%   
     mutate(
-      month = as.factor(lubridate::month(recent_month)),
-      quarter = as.factor(lubridate::quarter(recent_month))
+      month = lubridate::month(recent_month),
+      quarter = lubridate::quarter(recent_month)
     )
 }
 
@@ -372,12 +372,15 @@ library(mlr3extralearners)
 
 task_train <- as_task_classif(train_data, target = "result", id = "supplier_id")
 task_test <- as_task_classif(test_data, target = "result", id = "supplier_id")
-task <- as_task_classif(select(supplier, -recent_month), target = "result", id = "supplier_id")
+task <- supplier %>% 
+  select(-recent_month) %>% 
+  as_task_classif(target = "result", id = "supplier_id")
 
 learner <- lrn("classif.lightgbm")
 learner$train(task_train)
 prediction <- learner$predict(task_test)
 ```
+
 ### Feature importance
 
 ```{r}
@@ -408,6 +411,26 @@ prediction$score(measures) %>%
 library(mlr3viz)
 
 autoplot(prediction)
+```
+
+### Rolling window cross validation
+
+```{r}
+#| warning: false
+split <- lapply(10:8, function(end_month) {
+  train <- task$data()[, `:=`(id = 1:.N)][month < end_month, .(id)]$id
+  test <- task$data()[, `:=`(id = 1:.N)][month == end_month, .(id)]$id
+  list(train = train, test = test)
+}) 
+
+resampling <- rsmp("custom")
+resampling$instantiate(task,
+  train = lapply(split, function(x) x$train),
+  test = lapply(split, function(x) x$test)
+)
+
+rr <- resample(task, learner, resampling, store_models = TRUE)
+rr$aggregate(msr("classif.acc"))
 ```
 
 ### Model explaination with DALEX
