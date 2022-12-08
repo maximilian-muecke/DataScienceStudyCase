@@ -1,27 +1,37 @@
 ---
-Title: "Data Science Case Study: Supplier Audit Results Prediction"
-format: 
-  html:
-    code-fold: true
-    code-link: true
-    code-tools: true
-    df-print: paged
+title: "Data Science Case Study"
+subtitle: "Supplier Audit Results Prediction"
+author: "Maximilian Muecke"
+date: 2022-12-09
+format: revealjs
 ---
 
-# Data Science Case Study: Supplier Audit Results Prediction
+## Overview
 
-```{r}
-#| label: load-packages
-#| include: false
+- BMW has selected suppliers that must pass an auditing process
+- The audit process has three stages T1, T2, and T3 and the result corresponds 
+to the most recent result
+  - Green indicates that the supplier is qualified
+  - Yellow means that they receive warnings
+  - Red means that the suppliers are disqualified
+- Goal: predict the audit result and give the audit experts potential indicators
 
-library(dplyr)
-library(ggplot2)
-```
+## Data
+
+- Audit History: Dataset of supplier audit histories
+  - Monthly panel data set with 10 columns (2022-02-01 -- 2022-10-01)
+  - SupplierId, RecentMonth, RecentTimeStamp, DerivativeName, DerivativeRegion, 
+    ProductionLine, T1Color, T2Color, T3Color, Result
+- Supplier Performance KPIs: Dataset for key supplier performance indicators
+  - Cross sectional data with 5 columns
+  - SupplierId, Amount_WD_3M, Amount_Backlogs_3M, 12_Month_LPKM, BadSupplierIndicator
+- Datasets can be joined by the supplier id
 
 ```{r}
 #| label: import-clean-data
-#| echo: false
-#| warning: false
+#| include: false
+library(dplyr)
+library(ggplot2)
 
 import_data <- function(path) {
   audit_history <- readr::read_csv(
@@ -55,26 +65,47 @@ supplier <- import_data("../Data/") %>%
   clean_cols()
 ```
 
-## Data
+## Data: recent month
 
 ```{r}
-#| warning: false
-summary(supplier) %>%
+skimr::skim(supplier, recent_month) %>% 
+  select(
+    `Min date` = Date.min, `Max date` = Date.max, `No. dates` = Date.n_unique,
+    `No. missing` = n_missing, `Complete rate` = complete_rate
+  ) %>% 
   knitr::kable()
 ```
 
-### Issues
+## Data: panel data
 
 ```{r}
-#| label: missing-overview
-vapply(supplier, function(x) sum(is.na(x)), numeric(1)) %>% 
-  tibble::enframe(name = "column", value = "missing")
+skimr::skim(
+  supplier, supplier_id, derivative_name, derivative_region, production_line,
+  t1color, t2color, t3color, result
+) %>% 
+  select(
+    `Variable` = skim_variable, `No. unique` = factor.n_unique,
+    `No. missing` = n_missing, `Complete rate` = complete_rate
+    ) %>% 
+  knitr::kable(digits = 2)
 ```
 
-- `t1color`, `t2color`, `t3color` cols are being dropped i.e. missing has no effect
-- `derivative_region` missing for three distinct suppliers, i.e. cannot recreate -> not dropping and using NAs as extra region class
+## Data: cross sectional
 
-### Date range
+```{r}
+skimr::skim(
+  supplier, amount_wd_3m, amount_wd_6m, amount_wd_12m,
+  amount_backlogs_3m, amount_backlogs_6m,amount_backlogs_12m,
+  lpkm_12m, bad_supplier_indicator
+) %>% 
+  select(
+    `Variable` = skim_variable, `No. Missing` = n_missing, `Complete Rate` = complete_rate,
+    `Mean` = numeric.mean
+  ) %>% 
+  knitr::kable(digits = 2)
+```
+
+## Date range
 
 ```{r}
 date_max <- max(supplier$recent_month)
@@ -83,14 +114,15 @@ missing_date_range <- supplier %>%
   group_by(supplier_id) %>%
   summarise(date_min = min(recent_month), date_max = max(recent_month)) %>%
   filter(date_min != !!date_min | date_max != !!date_max)
-missing_date_range
+missing_date_range %>% 
+  head(3) %>% 
+  knitr::kable()
 ```
 
-There are `r nrow(missing_date_range)` of `r nrow(supplier)` observations not in the date range of `r date_min` and `r date_max`. Needs to be consider for models that require same panel size.
+- There are `r nrow(missing_date_range)` of `r nrow(supplier)` observations not in the date range of `r date_min` and `r date_max`. 
+- Needs to be consider for models that require same panel size.
 
-### Missing data
-
-#### Missing region
+## Missing region
 
 ```{r}
 #| label: missing-region
@@ -99,10 +131,13 @@ supplier %>%
   filter(is.na(derivative_region)) %>% 
   ungroup() %>% 
   select(derivative_name) %>% 
-  distinct()
+  distinct() %>%
+  knitr::kable()
 ```
 
-#### Missing lpkm_12m
+- Three derivatives have missing regions
+
+## Missing lpkm_12m
 
 ```{r}
 #| label: missing-lpkm_12m
@@ -110,7 +145,6 @@ missing_lpkm <- supplier %>%
   filter(is.na(lpkm_12m)) %>% 
   select(supplier_id) %>% 
   distinct()
-print(missing_lpkm)
 
 all_lpkm_missing <- vapply(pull(missing_lpkm), function(x) {
   supplier %>% 
@@ -119,14 +153,15 @@ all_lpkm_missing <- vapply(pull(missing_lpkm), function(x) {
     is.na() %>% 
     all()
 }, logical(1)) %>% 
-  all()
+  all() %>% 
+  knitr::kable()
 ```
 
 - 6 suppliers have missing `lpkm_12m` values.
 - Every supplier that has missing `lpkm_12m` values, has all of them missing.
-- Imputing with rolling mean.
+- Imputing with mean.
 
-### Assocation Matrix with Cramer's V score
+## Assocation Matrix with Cramer's V score
 
 ```{r}
 #| lable: cramerv-plot
@@ -153,20 +188,10 @@ supplier %>%
     )
 ```
 
-Target variable is highly imbalanced with `r green_perc`% being green, i.e. indicates that the suppliers are qualified in the current audit process with a much higher degree.
+- Highly imbalanced with `r round(green_perc * 100, 2)`% being green
+- Indicates that the suppliers are qualified in the current audit process with a much higher degree
 
-## Supplier derivative relationship
-
-### Derivatives with missing derivative region
-
-```{r}
-supplier %>%
-  filter(is.na(derivative_region)) %>%
-  select(derivative_name) %>%
-  distinct()
-```
-
-### Result vs. derivative region
+## Result vs. derivative region
 
 ```{r}
 ggplot(supplier) +
@@ -181,16 +206,16 @@ ggplot(supplier) +
   )
 ```
 
+## Result vs. derivative region
+
 ```{r}
-#| fig-width: 10
+#| fig-width: 15
 #| fig-height: 10
 vcd::mosaic(
   result ~ derivative_region,
   data = supplier,
   main = "Results vs. Region",
-  labeling_args = list(
-    set_varnames = c(result = "Result", derivative_region = "Region")
-  )
+  labeling = vcd::labeling_border(rot_labels = c(45, 45), varnames = FALSE)
 )
 ```
 
@@ -212,6 +237,8 @@ supplier %>%
    )
 ```
 
+## Seasonal effects
+
 ```{r}
 supplier %>%
   group_by(recent_month, derivative_region, result) %>%
@@ -228,6 +255,8 @@ supplier %>%
     color = "Derivative Region"
   )
 ```
+
+## Seasonal effects
 
 ```{r}
 supplier %>%
@@ -247,6 +276,13 @@ supplier %>%
 ```
 
 ## Prediction Model
+
+- Time series classification problem
+- Goal: get the audit result for the next month (1-step-ahed forecast)
+- Machine learning model: LightGBM
+  - Explainable
+  - Proven track record for time series (M3, M4 competitions etc.)
+  - Automatically deals with missing values
 
 ```{r}
 #| label: feature-engineering
@@ -294,22 +330,15 @@ add_count <- function(df) {
 }
 
 apply_lags <- function(df, lag = 1) {
-  # only one derivative_region and production_line per derivative_name
-  cols <- c(
-    "amount_wd_3m", "amount_wd_6m", "amount_wd_12m",
-    "amount_backlogs_3m", "amount_backlogs_6m", "amount_backlogs_12m",
-    "lpkm_12m", "bad_supplier_indicator"
-  )
+  # the rest is cross-sectional data, hence static across time
   df %>%
     group_by(supplier_id, derivative_name) %>% 
     mutate(
-      across(all_of(cols), ~ lag(.x, n = lag, order_by = recent_month), .names = "lag_{.col}"),
       lag_1_result = lag(result, n = 1, order_by = recent_month),
       lag_2_result = lag(result, n = 2, order_by = recent_month),
       lag_3_result = lag(result, n = 3, order_by = recent_month),
     ) %>% 
     ungroup() %>% 
-    select(!all_of(cols)) %>% 
     tidyr::drop_na()
 }
 
@@ -381,29 +410,43 @@ learner$train(task_train)
 prediction <- learner$predict(task_test)
 ```
 
-### Feature importance
+## 10 most important features
 
 ```{r}
+#| label: lgbm-feat-importance
 learner$importance() %>% 
-  tibble::enframe(name = "feature", value = "importance")
+  tibble::enframe(name = "feature", value = "importance") %>% 
+  slice(1:10) %>% 
+  knitr::kable(digits = 3)
 ```
 
-### Evaluation: Out-of-sample for most recent month on supplier, derivative level
+## Evaluation
+
+### Out-of-sample for most recent month on supplier, derivative level
 
 ```{r}
-#| label: out-of-sample-prediction
-
+#| label: confusion-matrix
 prediction$confusion %>% 
   knitr::kable(caption = "Confusion Matrix")
 ```
 
+## Evaluation 
+
+### Out-of-sample for most recent month on supplier, derivative level
 
 ```{r}
-measures <- msrs(c("classif.acc", "classif.ce", "classif.logloss"))
+#| label: out-of-sample-acc
+measures <- msrs(c("classif.acc", "classif.ce"))
 prediction$score(measures) %>% 
-  tibble::enframe(name = "Metric", value = "Value") %>% 
-  mutate(Value = sprintf("%.2f%%", Value * 100))
+  setNames(c("Accuracy", "Classifcation Error")) %>% 
+  tibble::enframe(name = "metric", value = "value") %>% 
+  mutate(value = sprintf("%.2f%%", value * 100)) %>% 
+  knitr::kable()
 ```
+
+## Evaluation
+
+### Out-of-sample for most recent month on supplier, derivative level
 
 ```{r}
 #| label: accuracy-plot
@@ -413,10 +456,10 @@ library(mlr3viz)
 autoplot(prediction)
 ```
 
-### Rolling window cross validation
+## 3-Fold Rolling window cross validation
 
 ```{r}
-#| warning: false
+#| include: false
 split <- lapply(10:8, function(end_month) {
   train <- task$data()[, `:=`(id = 1:.N)][month < end_month, .(id)]$id
   test <- task$data()[, `:=`(id = 1:.N)][month == end_month, .(id)]$id
@@ -428,15 +471,54 @@ resampling$instantiate(task,
   train = lapply(split, function(x) x$train),
   test = lapply(split, function(x) x$test)
 )
-
 rr <- resample(task, learner, resampling, store_models = TRUE)
-rr$aggregate(msr("classif.acc"))
 ```
 
-### Model explaination with DALEX
+```{r}
+measures <- msrs(c("classif.acc", "classif.ce"))
+rr$aggregate(msrs(c("classif.acc", "classif.ce"))) %>%
+  setNames(c("Accuracy", "Classifcation Error")) %>% 
+  tibble::enframe(name = "metric", value = "value") %>% 
+  mutate(value = sprintf("%.2f%%", value * 100)) %>% 
+  knitr::kable()
+```
 
 ```{r}
-#| warning: false
+#| label: para-tuning
+#| eval: false
+library(mlr3tuning)
+
+learner <- lrn("classif.lightgbm",
+  num_iterations = to_tune(1, 5000),
+  max_depth = to_tune(1, 20),
+  lambda_l1 = to_tune(1e-3, 1e3, logscale = TRUE)
+)
+
+split <- lapply(10:8, function(end_month) {
+  train <- task$data()[, `:=`(id = 1:.N)][month < end_month, .(id)]$id
+  test <- task$data()[, `:=`(id = 1:.N)][month == end_month, .(id)]$id
+  list(train = train, test = test)
+}) 
+
+resampling <- rsmp("custom")
+resampling$instantiate(task,
+  train = lapply(split, function(x) x$train),
+  test = lapply(split, function(x) x$test)
+)
+# BUG: bug in mlr3tuning? Opend PR on GitHub
+at <- auto_tuner(
+  method = tnr("random_search"),
+  learner = learner,
+  resampling = resampling,
+  measure = msr("classif.ce"),
+  terminator = trm("evals", n_evals = 5)
+)
+```
+
+## Model explaination with DALEX
+
+```{r}
+#| include: false
 library("DALEX")
 library("DALEXtra")
 
@@ -447,13 +529,14 @@ lgbm_exp <- explain_mlr3(learner,
   colorize = TRUE 
 )
 supplier_vi <- model_parts(lgbm_exp)
-head(supplier_vi)
 ```
 
 ```{r}
 #| warning: false
 plot(supplier_vi, max_vars = 12, show_boxplots = TRUE)
 ```
+
+## Model explaination with DALEX
 
 ```{r}
 #| warning: false
