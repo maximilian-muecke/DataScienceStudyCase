@@ -456,6 +456,21 @@ library(mlr3viz)
 autoplot(prediction)
 ```
 
+```{r}
+split <- lapply(10:8, function(end_month) {
+  train <- task$data()[, `:=`(id = 1:.N)][month < end_month, .(id)]$id
+  test <- task$data()[, `:=`(id = 1:.N)][month == end_month, .(id)]$id
+  list(train = train, test = test)
+}) 
+
+resampling <- rsmp("custom")
+resampling$instantiate(task,
+  train = lapply(split, function(x) x$train),
+  test = lapply(split, function(x) x$test)
+)
+rr <- resample(task, learner, resampling, store_models = TRUE)
+```
+
 ## 3-Fold Rolling window cross validation
 
 ```{r}
@@ -494,7 +509,7 @@ learner <- lrn("classif.lightgbm",
   lambda_l1 = to_tune(1e-3, 1e3, logscale = TRUE)
 )
 
-split <- lapply(10:8, function(end_month) {
+split <- lapply(9, function(end_month) {
   train <- task$data()[, `:=`(id = 1:.N)][month < end_month, .(id)]$id
   test <- task$data()[, `:=`(id = 1:.N)][month == end_month, .(id)]$id
   list(train = train, test = test)
@@ -505,14 +520,25 @@ resampling$instantiate(task,
   train = lapply(split, function(x) x$train),
   test = lapply(split, function(x) x$test)
 )
-# BUG: bug in mlr3tuning? Opend PR on GitHub
-at <- auto_tuner(
+
+instance <- tune(
   method = tnr("random_search"),
+  task = task,
   learner = learner,
   resampling = resampling,
   measure = msr("classif.ce"),
   terminator = trm("evals", n_evals = 5)
 )
+
+learner$param_set$values <- instance$result_learner_param_vals
+learner$train(task_train)
+prediction <- learner$predict(task_test)
+
+prediction$score(measures) %>% 
+  setNames(c("Accuracy", "Classifcation Error")) %>% 
+  tibble::enframe(name = "metric", value = "value") %>% 
+  mutate(value = sprintf("%.2f%%", value * 100)) %>% 
+  knitr::kable()
 ```
 
 ## Model explaination with DALEX
