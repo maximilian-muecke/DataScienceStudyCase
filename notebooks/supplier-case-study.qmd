@@ -396,6 +396,7 @@ test_data <- supplier %>%
 
 ```{r}
 #| label: train-model 
+library(lightgbm)
 library(mlr3)
 library(mlr3extralearners)
 
@@ -416,7 +417,7 @@ prediction <- learner$predict(task_test)
 #| label: lgbm-feat-importance
 learner$importance() %>% 
   tibble::enframe(name = "feature", value = "importance") %>% 
-  slice(1:10) %>% 
+  dplyr::slice(1:10) %>% 
   knitr::kable(digits = 3)
 ```
 
@@ -539,6 +540,50 @@ prediction$score(measures) %>%
   tibble::enframe(name = "metric", value = "value") %>% 
   mutate(value = sprintf("%.2f%%", value * 100)) %>% 
   knitr::kable()
+```
+
+## Nested Resampling
+
+```{r}
+learner <- lrn("classif.lightgbm",
+  num_iterations = to_tune(1, 5000),
+  max_depth = to_tune(1, 20),
+  lambda_l1 = to_tune(1e-3, 1e3, logscale = TRUE)
+)
+
+inner_split <- lapply(7:5, function(end_month) {
+  train <- task$data()[, `:=`(id = 1:.N)][month < end_month, .(id)]$id
+  test <- task$data()[, `:=`(id = 1:.N)][month == end_month, .(id)]$id
+  list(train = train, test = test)
+}) 
+
+inner_resampling <- rsmp("custom")
+inner_resampling$instantiate(task,
+  train = lapply(inner_split, function(x) x$train),
+  test = lapply(inner_split, function(x) x$test)
+)
+
+at = auto_tuner(
+  method = tnr("random_search"),
+  learner = learner,
+  resampling = inner_resampling,
+  measure = msr("classif.ce"),
+  term_evals = 5,
+)
+
+outer_split <- lapply(10:8, function(end_month) {
+  train <- task$data()[, `:=`(id = 1:.N)][month < end_month, .(id)]$id
+  test <- task$data()[, `:=`(id = 1:.N)][month == end_month, .(id)]$id
+  list(train = train, test = test)
+}) 
+
+outer_resampling <- rsmp("custom")
+outer_resampling$instantiate(task,
+  train = lapply(outer_split, function(x) x$train),
+  test = lapply(outer_split, function(x) x$test)
+)
+rr = resample(task, at, outer_resampling, store_models = TRUE)
+rr$aggregate()
 ```
 
 ## Model explaination with DALEX

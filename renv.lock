@@ -85,12 +85,6 @@
       "Version": "1.5-1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "RemoteType": "standard",
-      "RemotePkgRef": "Matrix",
-      "RemoteRef": "Matrix",
-      "RemoteRepos": "https://cloud.r-project.org",
-      "RemotePkgPlatform": "x86_64-apple-darwin17.0",
-      "RemoteSha": "1.5-1",
       "Hash": "539dc0c0c05636812f1080f473d2c177",
       "Requirements": [
         "lattice"
@@ -819,6 +813,19 @@
         "rlang"
       ]
     },
+    "lightgbm": {
+      "Package": "lightgbm",
+      "Version": "3.3.5",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "e6c3413a4762e6c0cb3a2d32da82a994",
+      "Requirements": [
+        "Matrix",
+        "R6",
+        "data.table",
+        "jsonlite"
+      ]
+    },
     "listenv": {
       "Package": "listenv",
       "Version": "0.8.0",
@@ -948,14 +955,14 @@
       "Package": "mlr3extralearners",
       "Version": "0.6.0-9000",
       "Source": "GitHub",
-      "Remotes": "alan-turing-institute/distr6, binderh/CoxBoost,\n        mlr-org/mlr3proba, RaphaelS1/survivalmodels, xoopR/param6,\n        xoopR/set6",
       "RemoteType": "github",
+      "Remotes": "alan-turing-institute/distr6, binderh/CoxBoost, mlr-org/mlr3proba,\n    RaphaelS1/survivalmodels, xoopR/param6, xoopR/set6",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "mlr3extralearners",
       "RemoteUsername": "mlr-org",
       "RemoteRef": "HEAD",
       "RemoteSha": "5c7780e2c8074a530668ce8194bcf4ae8917099e",
-      "Hash": "3a6caec703a7b58cb9da201974a118de",
+      "Hash": "62942226367a9ea32d7d44deac5400b2",
       "Requirements": [
         "R6",
         "checkmate",
@@ -1034,12 +1041,6 @@
       "Version": "3.1-160",
       "Source": "Repository",
       "Repository": "CRAN",
-      "RemoteType": "standard",
-      "RemotePkgRef": "nlme",
-      "RemoteRef": "nlme",
-      "RemoteRepos": "https://cloud.r-project.org",
-      "RemotePkgPlatform": "x86_64-apple-darwin17.0",
-      "RemoteSha": "3.1-160",
       "Hash": "02e3c6e7df163aafa8477225e6827bc5",
       "Requirements": [
         "lattice"
