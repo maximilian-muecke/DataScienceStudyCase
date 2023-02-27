@@ -586,6 +586,57 @@ rr = resample(task, at, outer_resampling, store_models = TRUE)
 rr$aggregate()
 ```
 
+## Custom Resampling
+
+```{r}
+learner <- lrn("classif.lightgbm",
+  num_iterations = to_tune(1, 5000),
+  max_depth = to_tune(1, 20),
+  lambda_l1 = to_tune(1e-3, 1e3, logscale = TRUE)
+)
+
+create_task <- function(supplier, end_month) {
+  supplier <- setDT(supplier)
+  supplier <- supplier[order(-recent_month), !c("recent_month")]
+  train <- supplier[month <= end_month, ]
+  test <- supplier[month == end_month, ]
+  train_task <- as_task_classif(train, target = "result", id = "supplier_id")
+  test_task <- as_task_classif(test, target = "result", id = "supplier_id")
+  list(train = train_task, test = test_task)
+}
+
+tasks <- lapply(10:8, function(end_month) create_task(supplier, end_month))
+names(tasks) <- 10:8
+score <- lapply(names(tasks), function(m) {
+  task_train <- tasks[[m]][["train"]]
+  task_test <- tasks[[m]][["test"]]
+  m <- as.integer(m)
+  m <- m - 1
+  
+  split <- lapply(seq(m, m - 1), function(end_month) {
+    train <- task_train$data()[, `:=`(id = 1:.N)][month < end_month, .(id)]$id
+    test <- task_train$data()[, `:=`(id = 1:.N)][month == end_month, .(id)]$id
+    list(train = train, test = test)
+  }) 
+  
+  resampling <- rsmp("custom")
+  resampling$instantiate(task_train,
+    train = lapply(split, function(x) x$train),
+    test = lapply(split, function(x) x$test)
+  )
+  
+  at <- auto_tuner(
+    method = tnr("random_search"),
+    learner = learner,
+    resampling = resampling,
+    measure = msr("classif.ce"),
+    term_evals = 5,
+  )
+  at$train(task_train)
+  at$predict(task_test)$score()
+})
+```
+
 ## Model explaination with DALEX
 
 ```{r}
